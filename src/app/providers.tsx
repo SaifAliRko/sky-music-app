@@ -1,6 +1,9 @@
 'use client';
 /* eslint-disable react-hooks/set-state-in-effect */
 
+import { getFavorites } from '@/lib/storage';
+import { store } from '@/store';
+import { GlobalStyle } from '@/styles/GlobalStyle';
 import { darkTheme, lightTheme } from '@/styles/theme';
 import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
@@ -17,6 +20,9 @@ function ProvidersContent({ children }: { children: React.ReactNode }) {
     const newTheme = isDark ? darkTheme : lightTheme;
     
     setTheme(newTheme);
+
+    // Initialize favorites from localStorage
+    const favorites = getFavorites();
 
     setIsMounted(true);
   }, []);
@@ -41,6 +47,7 @@ function ProvidersContent({ children }: { children: React.ReactNode }) {
     return (
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
+          <GlobalStyle />
           <div suppressHydrationWarning>{children}</div>
         </ThemeProvider>
       </Provider>
@@ -51,6 +58,7 @@ function ProvidersContent({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
+        <GlobalStyle />
         {children}
       </ThemeProvider>
     </Provider>
