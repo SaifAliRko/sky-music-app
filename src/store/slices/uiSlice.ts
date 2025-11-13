@@ -31,8 +31,32 @@ const uiSlice = createSlice({
       state.theme = state.theme === "light" ? "dark" : "light";
       saveTheme(state.theme);
     },
+
+    setSearchQuery: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload;
+    },
+
+    setSortBy: (state, action: PayloadAction<SortOption>) => {
+      state.sortBy = action.payload;
+    },
+
+    setFilterGenre: (state, action: PayloadAction<string | null>) => {
+      state.filterGenre = action.payload;
+    },
+
+    clearFilters: (state) => {
+      state.searchQuery = "";
+      state.filterGenre = null;
+    },
   },
 });
 
-export const { setTheme, toggleTheme } = uiSlice.actions;
+export const {
+  setTheme,
+  toggleTheme,
+  setSearchQuery,
+  setSortBy,
+  setFilterGenre,
+  clearFilters,
+} = uiSlice.actions;
 export default uiSlice.reducer;

@@ -40,6 +40,18 @@ const albumsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
+      .addCase(
+        fetchAlbums.fulfilled,
+        (state, action: PayloadAction<Album[]>) => {
+          state.loading = false;
+          state.entities = action.payload;
+          state.hasLoaded = true;
+        }
+      )
+      .addCase(fetchAlbums.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
