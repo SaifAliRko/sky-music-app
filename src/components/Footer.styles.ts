@@ -15,3 +15,12 @@ export const FooterContent = styled.div`
   color: ${(props) => props.theme.colors.textSecondary};
   font-size: ${(props) => props.theme.typography.fontSize.sm};
 `;
+
+export const Link = styled.a`
+  color: ${(props) => props.theme.colors.primary};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;

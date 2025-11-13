@@ -1,6 +1,6 @@
 'use client';
 
-import { FooterContent, FooterWrapper } from './Footer.styles';
+import { FooterContent, FooterWrapper, Link } from './Footer.styles';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,9 +10,9 @@ export function Footer() {
       <FooterContent>
         <p>
           🎵 Sky Music © {currentYear} |{' '}
-          <a href="https://itunes.apple.com" target="_blank" rel="noopener noreferrer">
+          <Link href="https://itunes.apple.com" target="_blank" rel="noopener noreferrer">
             Powered by iTunes API
-          </a>
+          </Link>
         </p>
       </FooterContent>
     </FooterWrapper>
