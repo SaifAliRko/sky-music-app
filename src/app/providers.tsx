@@ -3,6 +3,7 @@
 
 import { getFavorites } from '@/lib/storage';
 import { store } from '@/store';
+import { initializeFavorites } from '@/store/slices/favoritesSlice';
 import { GlobalStyle } from '@/styles/GlobalStyle';
 import { darkTheme, lightTheme } from '@/styles/theme';
 import { useEffect, useState } from 'react';
@@ -23,6 +24,7 @@ function ProvidersContent({ children }: { children: React.ReactNode }) {
 
     // Initialize favorites from localStorage
     const favorites = getFavorites();
+    store.dispatch(initializeFavorites(favorites));
 
     setIsMounted(true);
   }, []);
