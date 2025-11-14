@@ -6,9 +6,10 @@ import { Header } from '@/components/Header';
 import { LoadingSkeletons } from '@/components/LoadingSkeletons';
 import { SearchBar } from '@/components/SearchBar';
 import { SortBar } from '@/components/SortBar';
+import { useFilteredAndSortedAlbums } from '@/hooks/useAlbums';
 import type { AppDispatch, RootState } from '@/store';
 import { fetchAlbums } from '@/store/slices/albumsSlice';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -34,11 +35,8 @@ const ErrorWrapper = styled.div`
 
 export default function AlbumsPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { entities: albums, loading, error, hasLoaded } = useSelector(
+  const { loading, error, hasLoaded } = useSelector(
     (state: RootState) => state.albums
-  );
-  const { searchQuery, sortBy, filterGenre } = useSelector(
-    (state: RootState) => state.ui
   );
 
   useEffect(() => {
@@ -47,42 +45,8 @@ export default function AlbumsPage() {
     }
   }, [dispatch, hasLoaded, loading]);
 
-  // Filter and sort albums
-  const filteredAlbums = useMemo(() => {
-    let result = [...albums];
-
-    // Apply search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (album) =>
-          album.name.toLowerCase().includes(query) ||
-          album.artist.toLowerCase().includes(query)
-      );
-    }
-
-    // Apply genre filter
-    if (filterGenre && filterGenre !== 'All Genres') {
-      result = result.filter((album) =>
-        album.genre === filterGenre
-      );
-    }
-
-    // Apply sorting
-    result.sort((a, b) => {
-      switch (sortBy) {
-        case 'artist':
-          return a.artist.localeCompare(b.artist);
-        case 'genre':
-          return a.genre.localeCompare(b.genre);
-        case 'name':
-        default:
-          return a.name.localeCompare(b.name);
-      }
-    });
-
-    return result;
-  }, [albums, searchQuery, sortBy, filterGenre]);
+  // Use custom hook for filtered and sorted albums
+  const filteredAlbums = useFilteredAndSortedAlbums();
 
   return (
     <PageWrapper>

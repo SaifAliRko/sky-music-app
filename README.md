@@ -59,15 +59,57 @@ npm run dev
 
 ```
 src/
-├── app/                    # Next.js pages
-│   ├── albums/page.tsx     # Browse albums
-│   ├── album/[id]/page.tsx # Album details
-│   ├── favorites/page.tsx  # Favorites list
-│   └── layout.tsx          # Root layout + providers
-├── components/             # React components (Header, SearchBar, AlbumCard, etc.)
-├── lib/                    # Utilities (api.ts, storage.ts, types)
-├── store/                  # Redux slices (albums, favorites, ui)
-└── styles/                 # Theme & styled-components
+├── app/                          # Next.js pages
+│   ├── albums/page.tsx           # Browse albums (uses useFilteredAndSortedAlbums hook)
+│   ├── album/[id]/page.tsx       # Album details with tracks
+│   ├── favorites/page.tsx        # Favorites list
+│   └── layout.tsx                # Root layout + providers
+│
+├── components/                   # React components (all with separated styles)
+│   ├── Header.tsx / Header.styles.ts
+│   ├── Footer.tsx / Footer.styles.ts
+│   ├── AlbumCard.tsx / AlbumCard.styles.ts
+│   ├── AlbumGrid.tsx / AlbumGrid.styles.ts
+│   ├── SearchBar.tsx / SearchBar.styles.ts
+│   ├── SortBar.tsx / SortBar.styles.ts
+│   ├── FavoritesToggle.tsx / FavoritesToggle.styles.ts
+│   ├── LoadingSpinner.tsx / LoadingSpinner.styles.ts
+│   ├── AlbumDetail.styles.ts     # Album detail page styles
+│   └── __tests__/                # Component tests
+│
+├── hooks/                        # Custom React hooks
+│   ├── useAlbums.ts              # useFilteredAndSortedAlbums, useFavoriteAlbums, etc.
+│   └── index.ts                  # Hook exports
+│
+├── lib/                          # Utilities
+│   ├── api.ts                    # iTunes API calls
+│   ├── storage.ts                # localStorage helpers
+│   ├── parse.ts                  # Data normalization
+│   ├── itunes.types.ts           # Type definitions
+│   └── __tests__/                # Utility tests
+│
+├── store/                        # Redux store
+│   ├── index.ts                  # Store config
+│   └── slices/
+│       ├── albumsSlice.ts
+│       ├── favoritesSlice.ts
+│       ├── uiSlice.ts
+│       └── __tests__/
+│
+├── styles/                       # Styling (100% styled-components)
+│   ├── theme.ts                  # Light/dark themes
+│   ├── mixins.ts                 # Reusable CSS mixins
+│   ├── GlobalStyle.ts            # Global styles
+│   ├── styled.d.ts               # Type definitions
+│   └── ui/
+│       └── common.ts             # Reusable UI components
+│
+├── utils/                        # Utility functions
+│   ├── search.ts                 # filterBySearchQuery, filterByGenre, sortAlbums
+│   ├── helpers.ts                # formatDate, truncateString, debounce, throttle
+│   └── index.ts                  # Utility exports
+│
+└── public/                       # Static assets
 ```
 
 ## ✅ Testing
@@ -78,6 +120,26 @@ npm run test:coverage    # Coverage report
 ```
 
 **Coverage**: Component tests, Redux tests, and utility tests ensuring core functionality works correctly
+
+## 🔧 Refactoring & Code Quality
+
+The project has been refactored for maintainability and scalability:
+
+### ✨ Key Improvements
+- **100% styled-components**: All CSS moved from components to dedicated `.styles.ts` files
+- **Custom Hooks**: Extracted `useFilteredAndSortedAlbums`, `useFavoriteAlbums`, `useIsFavorite` for reusability
+- **Utility Functions**: Centralized filtering, sorting, and common helpers in `/utils`
+- **UI Component Library**: Created reusable styled components in `/styles/ui/common.ts`
+- **Cleaner Components**: Components focused on logic, styles extracted to dedicated files
+- **Better Organization**: Hooks, utilities, and styles properly separated and indexed
+
+### 📦 New Directories
+- `src/hooks/` - Custom React hooks for state and data management
+- `src/utils/` - Pure utility functions for filtering, sorting, formatting
+- `src/styles/ui/` - Reusable UI component styles
+
+### 📄 Files Removed
+- `src/app/page.module.css` - No longer needed, replaced with styled-components
 ## 🎯 Usage
 
 1. **Browse**: Top 100 albums load automatically

@@ -1,9 +1,9 @@
 import type { ITunesTrack } from './itunes.types';
 import {
-    Album,
-    ITunesRSSResponse,
-    ITunesTrackLookupResponse,
-    ITunesAlbumDetail,
+  Album,
+  ITunesAlbumDetail,
+  ITunesRSSResponse,
+  ITunesTrackLookupResponse,
 } from './itunes.types';
 import { parseRSSFeed, parseTrackLookupResponse } from './parse';
 
@@ -12,21 +12,49 @@ const RSS_FEED_URL = 'https://itunes.apple.com/us/rss/topalbums/limit=100/json';
 
 /**
  * Fetch top 100 albums from iTunes RSS feed
+ * Server-side function - directly calls iTunes API
+ */
+function fetchTopAlbumsFromItunes(): Promise<Album[]> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch(RSS_FEED_URL);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch albums: ${response.statusText}`);
+      }
+
+      const data: ITunesRSSResponse = await response.json();
+      resolve(parseRSSFeed(data));
+    } catch (error) {
+      console.error('Error fetching top albums:', error);
+      reject(error);
+    }
+  });
+}
+
+/**
+ * Fetch top 100 albums - calls API endpoint (for client-side use)
+ * Or directly fetches from iTunes (for server-side use)
  */
 export async function fetchTopAlbums(): Promise<Album[]> {
-  try {
-    const response = await fetch(RSS_FEED_URL);
+  // If running on client (window exists), call API endpoint
+  if (typeof window !== 'undefined') {
+    try {
+      const response = await fetch('/api/albums');
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch albums: ${response.statusText}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch albums: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching albums from API:', error);
+      throw error;
     }
-
-    const data: ITunesRSSResponse = await response.json();
-    return parseRSSFeed(data);
-  } catch (error) {
-    console.error('Error fetching top albums:', error);
-    throw error;
   }
+
+  // Server-side: call iTunes directly
+  return fetchTopAlbumsFromItunes();
 }
 
 /**
@@ -48,6 +76,26 @@ export async function lookupAlbumTracks(
     return parseTrackLookupResponse(data);
   } catch (error) {
     console.error('Error looking up album tracks:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch album details and tracks by collection ID
+ * Calls the Next.js API route which proxies to iTunes API
+ */
+export async function fetchAlbumDetails(albumId: string): Promise<ITunesTrackLookupResponse> {
+  try {
+    const response = await fetch(`/api/albums/${albumId}`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch album details: ${response.statusText}`);
+    }
+
+    const data: ITunesTrackLookupResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching album details:', error);
     throw error;
   }
 }
