@@ -1,9 +1,9 @@
 import { lightTheme } from '@/styles/theme';
-import { createTestStore } from '@/test-utils/store';
+import { createTestStore } from '@/utils/test-store';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { FavoritesToggle } from '../FavoritesToggle';
+import { FavoritesToggle } from '../FavoritesToggle/FavoritesToggle';
 
 describe('FavoritesToggle', () => {
   it('renders the favorite button', () => {

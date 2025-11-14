@@ -1,3 +1,9 @@
+/**
+ * API Route: GET /api/albums/[id]
+ * Returns album details and tracks for a specific album
+ * Acts as CORS proxy to avoid client-side CORS issues
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(

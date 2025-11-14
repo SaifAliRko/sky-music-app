@@ -1,0 +1,1 @@
+export { BackToAlbumsButton } from "./BackToAlbumsButton";

@@ -1,7 +1,7 @@
 "use client";
 
 import { AlbumGrid } from "@/components/AlbumGrid";
-import BackButton from "@/components/BackButton";
+import { BackToAlbumsButton } from "@/components/BackToAlbumsButton";
 import { useFavoritesHydration } from "@/hooks/useFavoritesHydration";
 import { useMemo } from "react";
 import {
@@ -14,7 +14,7 @@ import {
   FavoritesWrapper,
   HeaderLeft,
   Title,
-} from "./favorites.styles";
+} from "./styles/favorites.styles";
 
 export default function FavoritesPage() {
   const { isHydrated, albums, favoriteIds } = useFavoritesHydration();
@@ -39,7 +39,7 @@ export default function FavoritesPage() {
             )}
           </Title>
         </HeaderLeft>
-        <BackButton />
+        <BackToAlbumsButton />
       </FavoritesHeader>
 
       {favoritesArray.length === 0 ? (

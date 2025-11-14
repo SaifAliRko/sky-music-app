@@ -3,8 +3,34 @@
  */
 
 import type { Album } from '@/lib/itunes.types';
-import { selectFavoriteAlbums, selectFavoriteIds, selectFilteredAndSortedAlbums, selectSearchQuery, selectSortBy, selectTheme } from '@/store/selectors';
+import type { RootState } from '@/store';
+import { filterAndSortAlbums } from '@/utils/search';
+import { createSelector } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
+
+/**
+ * Memoized selectors for Redux state
+ * These prevent unnecessary re-renders by caching results
+ */
+
+// Basic selectors
+const selectAlbums = (state: RootState) => state.albums.entities;
+const selectFavoriteIds = (state: RootState) => state.favorites.ids;
+const selectSearchQuery = (state: RootState) => state.ui.searchQuery;
+const selectSortBy = (state: RootState) => state.ui.sortBy;
+const selectTheme = (state: RootState) => state.ui.theme;
+
+// Memoized selector for filtered and sorted albums
+const selectFilteredAndSortedAlbums = createSelector(
+  [selectAlbums, selectSearchQuery, selectSortBy],
+  (albums, searchQuery, sortBy) => filterAndSortAlbums(albums, searchQuery, sortBy)
+);
+
+// Memoized selector for favorite albums
+const selectFavoriteAlbums = createSelector(
+  [selectAlbums, selectFavoriteIds],
+  (albums, favoriteIds) => albums.filter((album) => favoriteIds.includes(album.id))
+);
 
 /**
  * Hook to get filtered and sorted albums based on Redux state

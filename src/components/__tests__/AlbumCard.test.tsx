@@ -1,10 +1,10 @@
 import { Album } from '@/lib/itunes.types';
 import { lightTheme } from '@/styles/theme';
-import { createTestStore } from '@/test-utils/store';
+import { createTestStore } from '@/utils/test-store';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { AlbumCard } from '../AlbumCard';
+import { AlbumCard } from '../AlbumCard/AlbumCard';
 
 const mockAlbum: Album = {
   id: 'test-album-1',

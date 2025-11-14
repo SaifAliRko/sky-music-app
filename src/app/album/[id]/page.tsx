@@ -1,5 +1,16 @@
 "use client";
 
+import { BackToAlbumsButton } from "@/components/BackToAlbumsButton";
+import { FavoritesToggle } from "@/components/FavoritesToggle";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { formatDuration } from "@/lib/parse";
+import type { AppDispatch, RootState } from "@/store";
+import { fetchAlbumTracks } from "@/store/slices/albumDetailsSlice";
+import { fetchAlbums } from "@/store/slices/albumsSlice";
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   AlbumHeader,
   AlbumImage,
@@ -21,18 +32,7 @@ import {
   TracksList,
   TracksSection,
   TracksTitle,
-} from "@/components/AlbumDetail.styles";
-import { BackToAlbumsButton } from "@/components/BackToAlbumsButton";
-import { FavoritesToggle } from "@/components/FavoritesToggle";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
-import { formatDuration } from "@/lib/parse";
-import type { AppDispatch, RootState } from "@/store";
-import { fetchAlbumTracks } from "@/store/slices/albumDetailsSlice";
-import { fetchAlbums } from "@/store/slices/albumsSlice";
-import { useParams } from "next/navigation";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+} from "./styles/AlbumDetail.styles";
 
 export default function AlbumDetailPage() {
   const params = useParams();

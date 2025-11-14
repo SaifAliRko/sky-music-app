@@ -103,17 +103,13 @@ src/
 │       └── __tests__/            # Redux tests
 │
 ├── styles/                       # Styling (100% styled-components)
-│   ├── theme.ts                  # Light/dark theme definitions
-│   ├── mixins.ts                 # Reusable CSS mixins & utilities
 │   ├── GlobalStyle.ts            # Global styles & reset
 │   ├── styled.d.ts               # TypeScript definitions for styled-components
-│   └── ui/
-│       └── common.ts             # Reusable UI component styles (Button, Card, etc)
+│   └── theme.ts                  # Light/dark theme definitions
 │
 ├── utils/                        # Pure utility functions
-│   ├── search.ts                 # filterBySearchQuery, filterByGenre, sortAlbums
-│   ├── helpers.ts                # formatDate, truncateString, debounce, throttle, isEmpty
-│   └── index.ts                  # Utility exports
+│   ├── index.ts                  # Barrel export
+│   └── search.ts                 # filterBySearchQuery, sortAlbums, filterAndSortAlbums
 │
 └── public/                       # Static assets
 ```
@@ -135,7 +131,7 @@ The project has been refactored for maintainability, scalability, and proper Red
 - **100% styled-components**: All CSS moved from components to dedicated `.styles.ts` files
 - **Custom Hooks**: Extracted `useFilteredAndSortedAlbums`, `useFavoriteAlbums`, `useIsFavorite` for reusability
 - **Utility Functions**: Centralized filtering, sorting, and common helpers in `/utils`
-- **UI Component Library**: Created reusable styled components in `/styles/ui/common.ts`
+
 - **Redux State Management**: Properly integrated Redux Toolkit with async thunks for all API calls
 - **API Routes**: Created Next.js API routes at `/api/albums` and `/api/albums/[id]` to proxy iTunes API (avoiding CORS on client)
 - **Album Details**: Dedicated Redux slice (`albumDetailsSlice`) for track management with `fetchAlbumTracks` async thunk

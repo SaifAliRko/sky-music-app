@@ -11,7 +11,7 @@ import type { AppDispatch, RootState } from '@/store';
 import { fetchAlbums } from '@/store/slices/albumsSlice';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ErrorWrapper, MainContent, PageWrapper } from './albums.styles';
+import { ErrorWrapper, MainContent, PageWrapper } from './styles/albums.styles';
 
 export default function AlbumsPage() {
   const dispatch = useDispatch<AppDispatch>();

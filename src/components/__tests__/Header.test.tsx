@@ -1,9 +1,9 @@
 import { lightTheme } from '@/styles/theme';
-import { createTestStore } from '@/test-utils/store';
+import { createTestStore } from '@/utils/test-store';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { Header } from '../Header';
+import { Header } from '../Header/Header';
 
 describe('Header', () => {
   beforeEach(() => {

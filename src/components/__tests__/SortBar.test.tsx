@@ -1,10 +1,10 @@
 import { lightTheme } from '@/styles/theme';
-import { createTestStore } from '@/test-utils/store';
+import { createTestStore } from '@/utils/test-store';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { SortBar } from '../SortBar';
+import { SortBar } from '../SortBar/SortBar';
 
 describe('SortBar', () => {
   it('renders sort dropdown', () => {
