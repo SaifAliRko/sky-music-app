@@ -1,6 +1,5 @@
 "use client";
 
-import { HeaderButton } from "@/app/favorites/favorites.styles";
 import {
   AlbumHeader,
   AlbumImage,
@@ -23,6 +22,7 @@ import {
   TracksSection,
   TracksTitle,
 } from "@/components/AlbumDetail.styles";
+import { BackToAlbumsButton } from "@/components/BackToAlbumsButton";
 import { FavoritesToggle } from "@/components/FavoritesToggle";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -30,7 +30,6 @@ import { formatDuration } from "@/lib/parse";
 import type { AppDispatch, RootState } from "@/store";
 import { fetchAlbumTracks } from "@/store/slices/albumDetailsSlice";
 import { fetchAlbums } from "@/store/slices/albumsSlice";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -71,10 +70,7 @@ export default function AlbumDetailPage() {
         <Header />
         <MainContent>
           <HeaderButtonContainer>
-            <HeaderButton href="/albums" title="Back to Albums">
-              <Image src="/return-button.png" alt="Back" width={30} height={30} />
-              Back to Albums
-            </HeaderButton>
+            <BackToAlbumsButton />
           </HeaderButtonContainer>
           <LoadingWrapper>Loading album...</LoadingWrapper>
         </MainContent>
@@ -90,10 +86,7 @@ export default function AlbumDetailPage() {
         <Header />
         <MainContent>
           <HeaderButtonContainer>
-            <HeaderButton href="/albums" title="Back to Albums">
-              <Image src="/return-button.png" alt="Back" width={30} height={30} />
-              Back to Albums
-            </HeaderButton>
+            <BackToAlbumsButton />
           </HeaderButtonContainer>
           <ErrorWrapper>Album not found</ErrorWrapper>
         </MainContent>
@@ -107,10 +100,7 @@ export default function AlbumDetailPage() {
       <Header />
       <MainContent>
         <HeaderButtonContainer>
-          <HeaderButton href="/albums" title="Back to Albums">
-            <Image src="/return-button.png" alt="Back" width={30} height={30} />
-            Back to Albums
-          </HeaderButton>
+          <BackToAlbumsButton />
         </HeaderButtonContainer>
         <AlbumHeader>
           <AlbumImage src={album.image} alt={album.name} />

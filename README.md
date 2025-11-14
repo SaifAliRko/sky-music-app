@@ -59,11 +59,15 @@ npm run dev
 
 ```
 src/
-├── app/                          # Next.js pages
+├── app/                          # Next.js App Router pages
+│   ├── api/
+│   │   └── albums/               # API routes (CORS proxy for iTunes)
+│   │       ├── route.ts          # GET /api/albums - Fetch top 100 albums
+│   │       └── [id]/route.ts     # GET /api/albums/[id] - Fetch album details & tracks
 │   ├── albums/page.tsx           # Browse albums (uses useFilteredAndSortedAlbums hook)
-│   ├── album/[id]/page.tsx       # Album details with tracks
-│   ├── favorites/page.tsx        # Favorites list
-│   └── layout.tsx                # Root layout + providers
+│   ├── album/[id]/page.tsx       # Album details with tracks (Redux-based)
+│   ├── favorites/page.tsx        # Favorites list (persisted in localStorage)
+│   └── layout.tsx                # Root layout + Redux Provider
 │
 ├── components/                   # React components (all with separated styles)
 │   ├── Header.tsx / Header.styles.ts
@@ -73,40 +77,42 @@ src/
 │   ├── SearchBar.tsx / SearchBar.styles.ts
 │   ├── SortBar.tsx / SortBar.styles.ts
 │   ├── FavoritesToggle.tsx / FavoritesToggle.styles.ts
+│   ├── LoadingSkeletons.tsx
 │   ├── LoadingSpinner.tsx / LoadingSpinner.styles.ts
 │   ├── AlbumDetail.styles.ts     # Album detail page styles
 │   └── __tests__/                # Component tests
 │
 ├── hooks/                        # Custom React hooks
-│   ├── useAlbums.ts              # useFilteredAndSortedAlbums, useFavoriteAlbums, etc.
+│   ├── useAlbums.ts              # useFilteredAndSortedAlbums, useFavoriteAlbums, useIsFavorite, theme/ui hooks
 │   └── index.ts                  # Hook exports
 │
-├── lib/                          # Utilities
-│   ├── api.ts                    # iTunes API calls
-│   ├── storage.ts                # localStorage helpers
-│   ├── parse.ts                  # Data normalization
-│   ├── itunes.types.ts           # Type definitions
+├── lib/                          # Utilities & API functions
+│   ├── api.ts                    # iTunes API calls + wrapper for API routes
+│   ├── storage.ts                # localStorage helpers with validation
+│   ├── parse.ts                  # Data normalization & parsing
+│   ├── itunes.types.ts           # TypeScript types & interfaces
 │   └── __tests__/                # Utility tests
 │
-├── store/                        # Redux store
-│   ├── index.ts                  # Store config
+├── store/                        # Redux store (Redux Toolkit)
+│   ├── index.ts                  # Store config with all slices
 │   └── slices/
-│       ├── albumsSlice.ts
-│       ├── favoritesSlice.ts
-│       ├── uiSlice.ts
-│       └── __tests__/
+│       ├── albumsSlice.ts        # Albums list + fetchAlbums async thunk
+│       ├── albumDetailsSlice.ts  # Album tracks + fetchAlbumTracks async thunk
+│       ├── favoritesSlice.ts     # Favorites management + localStorage sync
+│       ├── uiSlice.ts            # UI state (theme, search, sort)
+│       └── __tests__/            # Redux tests
 │
 ├── styles/                       # Styling (100% styled-components)
-│   ├── theme.ts                  # Light/dark themes
-│   ├── mixins.ts                 # Reusable CSS mixins
-│   ├── GlobalStyle.ts            # Global styles
-│   ├── styled.d.ts               # Type definitions
+│   ├── theme.ts                  # Light/dark theme definitions
+│   ├── mixins.ts                 # Reusable CSS mixins & utilities
+│   ├── GlobalStyle.ts            # Global styles & reset
+│   ├── styled.d.ts               # TypeScript definitions for styled-components
 │   └── ui/
-│       └── common.ts             # Reusable UI components
+│       └── common.ts             # Reusable UI component styles (Button, Card, etc)
 │
-├── utils/                        # Utility functions
+├── utils/                        # Pure utility functions
 │   ├── search.ts                 # filterBySearchQuery, filterByGenre, sortAlbums
-│   ├── helpers.ts                # formatDate, truncateString, debounce, throttle
+│   ├── helpers.ts                # formatDate, truncateString, debounce, throttle, isEmpty
 │   └── index.ts                  # Utility exports
 │
 └── public/                       # Static assets
@@ -123,20 +129,35 @@ npm run test:coverage    # Coverage report
 
 ## 🔧 Refactoring & Code Quality
 
-The project has been refactored for maintainability and scalability:
+The project has been refactored for maintainability, scalability, and proper Redux Toolkit integration:
 
 ### ✨ Key Improvements
 - **100% styled-components**: All CSS moved from components to dedicated `.styles.ts` files
 - **Custom Hooks**: Extracted `useFilteredAndSortedAlbums`, `useFavoriteAlbums`, `useIsFavorite` for reusability
 - **Utility Functions**: Centralized filtering, sorting, and common helpers in `/utils`
 - **UI Component Library**: Created reusable styled components in `/styles/ui/common.ts`
+- **Redux State Management**: Properly integrated Redux Toolkit with async thunks for all API calls
+- **API Routes**: Created Next.js API routes at `/api/albums` and `/api/albums/[id]` to proxy iTunes API (avoiding CORS on client)
+- **Album Details**: Dedicated Redux slice (`albumDetailsSlice`) for track management with `fetchAlbumTracks` async thunk
 - **Cleaner Components**: Components focused on logic, styles extracted to dedicated files
-- **Better Organization**: Hooks, utilities, and styles properly separated and indexed
+- **Better Organization**: Hooks, utilities, styles, and API routes properly separated and indexed
 
-### 📦 New Directories
-- `src/hooks/` - Custom React hooks for state and data management
-- `src/utils/` - Pure utility functions for filtering, sorting, formatting
+### 📦 Redux Integration
+- **`albumsSlice`**: Manages top 100 albums with `fetchAlbums` async thunk
+- **`albumDetailsSlice`**: Manages album tracks with `fetchAlbumTracks` async thunk
+- **`favoritesSlice`**: Manages saved albums with localStorage persistence
+- **`uiSlice`**: Manages UI state (theme, search, sort)
+
+### 📂 New Files & Directories
+- `src/hooks/` - Custom React hooks
+- `src/utils/` - Pure utility functions
 - `src/styles/ui/` - Reusable UI component styles
+- `src/app/api/albums/route.ts` - API endpoint for top albums
+- `src/app/api/albums/[id]/route.ts` - API endpoint for album details
+- `src/store/slices/albumDetailsSlice.ts` - Redux slice for tracks
+
+### 📄 Files Removed
+- `src/app/page.module.css` - Replaced with styled-components
 
 ### 📄 Files Removed
 - `src/app/page.module.css` - No longer needed, replaced with styled-components

@@ -1,23 +1,9 @@
-import albumsReducer from '@/store/slices/albumsSlice';
-import favoritesReducer from '@/store/slices/favoritesSlice';
-import uiReducer from '@/store/slices/uiSlice';
 import { lightTheme } from '@/styles/theme';
-import { configureStore } from '@reduxjs/toolkit';
+import { createTestStore } from '@/test-utils/store';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { FavoritesToggle } from '../FavoritesToggle';
-
-// Create a test store
-function createTestStore() {
-  return configureStore({
-    reducer: {
-      favorites: favoritesReducer,
-      ui: uiReducer,
-      albums: albumsReducer,
-    },
-  });
-}
 
 describe('FavoritesToggle', () => {
   it('renders the favorite button', () => {

@@ -11,27 +11,7 @@ import type { AppDispatch, RootState } from '@/store';
 import { fetchAlbums } from '@/store/slices/albumsSlice';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-
-const PageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: ${(props) => props.theme.colors.background};
-`;
-
-const MainContent = styled.main`
-  flex: 1;
-`;
-
-const ErrorWrapper = styled.div`
-  padding: ${(props) => props.theme.spacing.xxl};
-  background-color: ${(props) => `${props.theme.colors.error}10`};
-  color: ${(props) => props.theme.colors.error};
-  text-align: center;
-  border-radius: ${(props) => props.theme.borderRadius.lg};
-  margin: ${(props) => props.theme.spacing.lg};
-`;
+import { ErrorWrapper, MainContent, PageWrapper } from './albums.styles';
 
 export default function AlbumsPage() {
   const dispatch = useDispatch<AppDispatch>();
