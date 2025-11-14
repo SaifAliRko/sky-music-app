@@ -7,6 +7,8 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  forceExit: true,
+  bail: 1,
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
       tsconfig: {

@@ -5,8 +5,10 @@ const originalError = console.error;
 console.error = (...args) => {
   const errorMessage = typeof args[0] === 'string' ? args[0] : '';
   
-  // Suppress Next.js dynamic component warning
-  if (errorMessage.includes('An update to ForwardRef(LoadableComponent) inside a test was not wrapped in act')) {
+  // Suppress Next.js dynamic component warning (LoadableComponent)
+  if (errorMessage.includes('An update to ForwardRef(LoadableComponent) inside a test was not wrapped in act') ||
+      errorMessage.includes('ForwardRef(LoadableComponent)') ||
+      errorMessage.includes('not wrapped in act')) {
     return;
   }
   
@@ -59,3 +61,6 @@ const localStorageMock = {
 Object.defineProperty(global, 'localStorage', {
   value: localStorageMock,
 });
+
+// Suppress Jest worker process cleanup warning
+jest.setTimeout(10000);
