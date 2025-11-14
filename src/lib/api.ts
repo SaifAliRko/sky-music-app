@@ -1,16 +1,18 @@
+import type { ITunesTrack } from './itunes.types';
 import {
-  Album,
-  ITunesRSSResponse,
-  ITunesTrack,
-  ITunesTrackLookupResponse,
-} from "./itunes.types";
-import { parseRSSFeed, parseTrackLookupResponse } from "./parse";
+    Album,
+    ITunesRSSResponse,
+    ITunesTrackLookupResponse,
+    ITunesAlbumDetail,
+} from './itunes.types';
+import { parseRSSFeed, parseTrackLookupResponse } from './parse';
 
-const ITUNES_API_BASE = "https://itunes.apple.com";
-const RSS_FEED_URL = "https://itunes.apple.com/us/rss/topalbums/limit=100/json";
+const ITUNES_API_BASE = 'https://itunes.apple.com';
+const RSS_FEED_URL = 'https://itunes.apple.com/us/rss/topalbums/limit=100/json';
 
-// Fetch top 100 albums from iTunes RSS feed
-
+/**
+ * Fetch top 100 albums from iTunes RSS feed
+ */
 export async function fetchTopAlbums(): Promise<Album[]> {
   try {
     const response = await fetch(RSS_FEED_URL);
@@ -22,12 +24,15 @@ export async function fetchTopAlbums(): Promise<Album[]> {
     const data: ITunesRSSResponse = await response.json();
     return parseRSSFeed(data);
   } catch (error) {
-    console.error("Error fetching top albums:", error);
+    console.error('Error fetching top albums:', error);
     throw error;
   }
 }
 
- // Lookup album details and tracks by collection ID
+/**
+ * Lookup album details and tracks by collection ID
+ * Returns both album info and track list
+ */
 export async function lookupAlbumTracks(
   collectionId: string
 ): Promise<ITunesTrack[]> {
@@ -42,7 +47,48 @@ export async function lookupAlbumTracks(
     const data: ITunesTrackLookupResponse = await response.json();
     return parseTrackLookupResponse(data);
   } catch (error) {
-    console.error("Error looking up album tracks:", error);
+    console.error('Error looking up album tracks:', error);
     throw error;
   }
+}
+
+/**
+ * Get album details from lookup response
+ * Extracts album info from the first result in the lookup response
+ */
+export function getAlbumFromLookup(data: ITunesTrackLookupResponse): Album | null {
+  if (!data?.results || data.results.length === 0) {
+    return null;
+  }
+
+  const albumResult = data.results[0];
+  
+  // Type guard: check if it has album-specific fields (not a track)
+  if ('collectionName' in albumResult && 'artistName' in albumResult && 'collectionId' in albumResult) {
+    const albumDetail = albumResult as ITunesAlbumDetail;
+    
+    // Ensure required properties exist
+    if (!albumDetail.collectionName || !albumDetail.artistName) {
+      return null;
+    }
+
+    try {
+      const result: Album = {
+        id: String(albumDetail.collectionId),
+        name: albumDetail.collectionName,
+        artist: albumDetail.artistName,
+        image: albumDetail.artworkUrl600 || albumDetail.artworkUrl100 || '',
+        genre: albumDetail.primaryGenreName || 'Unknown',
+        releaseDate: albumDetail.releaseDate ? new Date(albumDetail.releaseDate).toLocaleDateString() : '',
+        price: albumDetail.collectionPrice ? `$${Number(albumDetail.collectionPrice).toFixed(2)}` : '$0.00',
+      };
+      
+      return result;
+    } catch (error) {
+      console.error('[getAlbumFromLookup] Error parsing album:', error);
+      return null;
+    }
+  }
+
+  return null;
 }

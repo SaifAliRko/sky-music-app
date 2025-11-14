@@ -4,8 +4,8 @@ import { HeaderButton } from "@/app/favorites/favorites.styles";
 import { FavoritesToggle } from "@/components/FavoritesToggle";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { lookupAlbumTracks } from "@/lib/api";
-import type { ITunesTrack } from "@/lib/itunes.types";
+import { getAlbumFromLookup } from "@/lib/api";
+import type { ITunesTrack, ITunesTrackLookupResponse, Album } from "@/lib/itunes.types";
 import { formatDuration } from "@/lib/parse";
 import type { RootState } from "@/store";
 import Image from "next/image";
@@ -193,31 +193,60 @@ export default function AlbumDetailPage() {
   const [tracks, setTracks] = useState<ITunesTrack[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [albumData, setAlbumData] = useState<Album | null>(null);
 
   const album = useSelector((state: RootState) =>
     state.albums.entities.find((a) => a.id === albumId)
   );
 
   useEffect(() => {
-    const fetchTracks = async () => {
+    const fetchAlbumData = async () => {
       try {
         setLoading(true);
-        const result = await lookupAlbumTracks(albumId);
-        setTracks(result);
+        
+        // Fetch through our API route to avoid CORS issues
+        const response = await fetch(`/api/album/${albumId}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to load album');
+        }
+
+        const data: ITunesTrackLookupResponse = await response.json();
+        
+        // Extract album info from first result
+        const albumInfo = getAlbumFromLookup(data);
+        
+        if (albumInfo) {
+          setAlbumData(albumInfo);
+        }
+        
+        // Extract tracks from results (skip first which is album info)
+        const tracks = data.results
+          .slice(1)
+          .filter((result): result is ITunesTrack => 'trackId' in result)
+          .map((track) => ({
+            trackId: track.trackId,
+            trackName: track.trackName,
+            trackNumber: track.trackNumber,
+            trackTimeMillis: track.trackTimeMillis,
+            previewUrl: track.previewUrl,
+          }));
+        
+        setTracks(tracks);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load tracks");
+        setError(err instanceof Error ? err.message : "Failed to load album");
       } finally {
         setLoading(false);
       }
     };
 
     if (albumId) {
-      fetchTracks();
+      fetchAlbumData();
     }
   }, [albumId]);
 
-  if (!album) {
+  if (!album && !albumData) {
     return (
       <PageWrapper>
         <Header />
@@ -226,12 +255,18 @@ export default function AlbumDetailPage() {
             <Image src="/return-button.png" alt="Back" width={30} height={30} />
             Back to Albums
           </HeaderButton>
-          <ErrorWrapper>Album not found</ErrorWrapper>
+          {error ? (
+            <ErrorWrapper>{error}</ErrorWrapper>
+          ) : (
+            <LoadingWrapper>Loading album...</LoadingWrapper>
+          )}
         </MainContent>
         <Footer />
       </PageWrapper>
     );
   }
+
+  const displayAlbum = (album || albumData)!;
 
   return (
     <PageWrapper>
@@ -244,13 +279,13 @@ export default function AlbumDetailPage() {
           </HeaderButton>
         </div>
         <AlbumHeader>
-          <AlbumImage src={album.image} alt={album.name} />
+          <AlbumImage src={displayAlbum.image} alt={displayAlbum.name} />
           <AlbumInfo>
-            <Title>{album.name}</Title>
-            <Artist>{album.artist}</Artist>
+            <Title>{displayAlbum.name}</Title>
+            <Artist>{displayAlbum.artist}</Artist>
             <Meta>
-              <MetaItem>🎵 Genre: {album.genre}</MetaItem>
-              <MetaItem>💰 {album.price}</MetaItem>
+              <MetaItem>🎵 Genre: {displayAlbum.genre}</MetaItem>
+              <MetaItem>💰 {displayAlbum.price}</MetaItem>
             </Meta>
             <div>
               <FavoritesToggle albumId={albumId} showLabel={true} />
