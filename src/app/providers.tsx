@@ -1,4 +1,5 @@
 "use client";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import { getFavorites } from "@/lib/storage";
@@ -39,7 +40,7 @@ function ProvidersContent({ children }: { children: React.ReactNode }) {
 
   // Only render content after client-side hydration
   if (!isClient) {
-    return <h1>Loading....</h1>;
+    return <LoadingSpinner />;
   }
 
   return (

@@ -1,58 +1,107 @@
-'use client';
-/* eslint-disable react-hooks/set-state-in-effect */
+"use client";
 
-import { LoadingSpinner } from '@/components/LoadingSpinner';
-import { getFavorites } from '@/lib/storage';
-import { store } from '@/store';
-import { initializeFavorites } from '@/store/slices/favoritesSlice';
-import { GlobalStyle } from '@/styles/GlobalStyle';
-import { darkTheme, lightTheme } from '@/styles/theme';
-import { useEffect, useState } from 'react';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
+import { AlbumGrid } from "@/components/AlbumGrid";
+import BackButton from "@/components/BackButton";
+import { fetchTopAlbums } from "@/lib/api";
+import { getFavorites } from "@/lib/storage";
+import type { RootState } from "@/store";
+import { setAlbums } from "@/store/slices/albumsSlice";
+import { initializeFavorites } from "@/store/slices/favoritesSlice";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  BackLink,
+  Count,
+  EmptyIcon,
+  EmptyState,
+  EmptyText,
+  FavoritesHeader,
+  FavoritesWrapper,
+  HeaderLeft,
+  Title,
+} from "./favorites.styles";
 
-function ProvidersContent({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<typeof lightTheme>(lightTheme);
-  const [isClient, setIsClient] = useState(false);
+export default function FavoritesPage() {
+  const dispatch = useDispatch();
+  const [isHydrated, setIsHydrated] = useState(false);
 
+  const favoriteIds = useSelector((state: RootState) => state.favorites.ids);
+  const albums = useSelector((state: RootState) => state.albums.entities);
+
+  // Load favorites and albums on mount
   useEffect(() => {
-    // Mark that we're on the client and hydration is complete
-    setIsClient(true);
+    let isMounted = true;
 
-    // Check localStorage for theme preference
-    const savedTheme = localStorage.getItem("sky_music_theme") || "light";
-    const newTheme = savedTheme === "dark" ? darkTheme : lightTheme;
-    setTheme(newTheme);
+    (async () => {
+      // Get stored favorites from localStorage
+      const stored = getFavorites();
 
-    // Initialize favorites from localStorage
-    const favorites = getFavorites();
-    store.dispatch(initializeFavorites(favorites));
+      // Initialize Redux with localStorage favorites if Redux is empty
+      if (stored.length > 0 && favoriteIds.length === 0) {
+        dispatch(initializeFavorites(stored));
+      }
 
-    const handleStorageChange = () => {
-      const updatedTheme = localStorage.getItem("sky_music_theme") || "light";
-      const newTheme = updatedTheme === "dark" ? darkTheme : lightTheme;
-      setTheme(newTheme);
+      // Fetch albums if we have favorites but no albums loaded
+      if (albums.length === 0 && stored.length > 0) {
+        try {
+          const fetchedAlbums = await fetchTopAlbums();
+          if (isMounted) {
+            dispatch(setAlbums(fetchedAlbums));
+          }
+        } catch (error) {
+          console.error("Failed to fetch albums:", error);
+        }
+      }
+
+      // Mark hydration complete
+      if (isMounted) {
+        setIsHydrated(true);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
     };
+  }, [dispatch, favoriteIds.length, albums.length]);
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  // Use Redux favorites if available, otherwise use stored favorites
+  const effectiveFavoriteIds = favoriteIds;
 
-  // Only render content after client-side hydration
-  if (!isClient) {
-    return <LoadingSpinner />;
+  const favoritesArray = useMemo(() => {
+    return albums.filter((album) => effectiveFavoriteIds.includes(album.id));
+  }, [albums, effectiveFavoriteIds]);
+
+  // Don't render until hydration is complete
+  if (!isHydrated) {
+    return null;
   }
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        {children}
-      </ThemeProvider>
-    </Provider>
-  );
-}
+    <FavoritesWrapper>
+      <FavoritesHeader>
+        <HeaderLeft>
+          <Title>
+            ❤️ My Favorites
+            {favoritesArray.length > 0 && (
+              <Count>({favoritesArray.length})</Count>
+            )}
+          </Title>
+        </HeaderLeft>
+        <BackButton />
+      </FavoritesHeader>
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  return <ProvidersContent>{children}</ProvidersContent>;
+      {favoritesArray.length === 0 ? (
+        <EmptyState>
+          <EmptyIcon>💔</EmptyIcon>
+          <EmptyText>
+            No favorites yet! Start adding albums to your favorites by clicking
+            the heart icon on any album.
+          </EmptyText>
+          <BackLink href="/albums">Browse Albums</BackLink>
+        </EmptyState>
+      ) : (
+        <AlbumGrid albums={favoritesArray} />
+      )}
+    </FavoritesWrapper>
+  );
 }
