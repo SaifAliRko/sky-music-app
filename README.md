@@ -60,34 +60,85 @@ npm run dev
 ```
 src/
 ├── app/                          # Next.js App Router pages
-│   ├── api/
-│   │   └── albums/               # API routes (CORS proxy for iTunes)
-│   │       ├── route.ts          # GET /api/albums - Fetch top 100 albums
-│   │       └── [id]/route.ts     # GET /api/albums/[id] - Fetch album details & tracks
-│   ├── albums/page.tsx           # Browse albums (uses useFilteredAndSortedAlbums hook)
-│   ├── album/[id]/page.tsx       # Album details with tracks (Redux-based)
-│   ├── favorites/page.tsx        # Favorites list (persisted in localStorage)
-│   └── layout.tsx                # Root layout + Redux Provider
+│   ├── layout.tsx                # Root layout + Redux/Theme providers
+│   ├── page.tsx                  # Home (redirects to /albums)
+│   ├── not-found.tsx             # Custom 404 page
+│   ├── providers.tsx             # Redux + ThemeProvider wrapper
+│   │
+│   ├── api/albums/               # API routes (CORS proxy for iTunes)
+│   │   ├── route.ts              # GET /api/albums - Fetch top 100 albums
+│   │   └── [id]/route.ts         # GET /api/albums/[id] - Fetch album details & tracks
+│   │
+│   ├── albums/                   # Albums page
+│   │   ├── page.tsx              # Browse albums (client component with Redux)
+│   │   └── styles/
+│   │       └── albums.styles.ts  # Albums page styles
+│   │
+│   ├── album/[id]/               # Album detail page
+│   │   ├── page.tsx              # Album details with tracks (Redux-based)
+│   │   └── styles/
+│   │       └── AlbumDetail.styles.ts
+│   │
+│   └── favorites/                # Favorites page
+│       ├── page.tsx              # Favorites list (localStorage persisted)
+│       └── styles/
+│           └── favorites.styles.ts
 │
-├── components/                   # React components (all with separated styles)
-│   ├── Header.tsx / Header.styles.ts
-│   ├── Footer.tsx / Footer.styles.ts
-│   ├── AlbumCard.tsx / AlbumCard.styles.ts
-│   ├── AlbumGrid.tsx / AlbumGrid.styles.ts
-│   ├── SearchBar.tsx / SearchBar.styles.ts
-│   ├── SortBar.tsx / SortBar.styles.ts
-│   ├── FavoritesToggle.tsx / FavoritesToggle.styles.ts
-│   ├── LoadingSkeletons.tsx
-│   ├── LoadingSpinner.tsx / LoadingSpinner.styles.ts
-│   ├── AlbumDetail.styles.ts     # Album detail page styles
-│   └── __tests__/                # Component tests
+├── components/                   # React components (organized in subfolders)
+│   ├── AlbumCard/
+│   │   ├── AlbumCard.tsx
+│   │   ├── AlbumCard.styles.ts
+│   │   └── index.ts
+│   ├── AlbumGrid/
+│   │   ├── AlbumGrid.tsx
+│   │   ├── AlbumGrid.styles.ts
+│   │   └── index.ts
+│   ├── BackToAlbumsButton/
+│   │   ├── BackToAlbumsButton.tsx
+│   │   └── index.ts
+│   ├── FavoritesToggle/
+│   │   ├── FavoritesToggle.tsx
+│   │   ├── FavoritesToggle.styles.ts
+│   │   └── index.ts
+│   ├── Footer/
+│   │   ├── Footer.tsx
+│   │   ├── Footer.styles.ts
+│   │   └── index.ts
+│   ├── Header/
+│   │   ├── Header.tsx
+│   │   ├── Header.styles.ts
+│   │   └── index.ts
+│   ├── LoadingSkeletons/
+│   │   ├── LoadingSkeletons.tsx
+│   │   ├── LoadingSkeletons.styles.ts
+│   │   └── index.ts
+│   ├── LoadingSpinner/
+│   │   ├── LoadingSpinner.tsx
+│   │   ├── LoadingSpinner.styles.ts
+│   │   └── index.ts
+│   ├── SearchBar/
+│   │   ├── SearchBar.tsx
+│   │   ├── SearchBar.styles.ts
+│   │   └── index.ts
+│   ├── SortBar/
+│   │   ├── SortBar.tsx
+│   │   ├── SortBar.styles.ts
+│   │   └── index.ts
+│   └── __tests__/                # Component tests (60+ tests)
+│       ├── AlbumCard.test.tsx
+│       ├── FavoritesToggle.test.tsx
+│       ├── Header.test.tsx
+│       ├── SearchBar.test.tsx
+│       └── SortBar.test.tsx
 │
-├── hooks/                        # Custom React hooks
-│   ├── useAlbums.ts              # useFilteredAndSortedAlbums, useFavoriteAlbums, useIsFavorite, theme/ui hooks
+├── hooks/                        # Custom React hooks + memoized selectors
+│   ├── useAlbums.ts              # useFilteredAndSortedAlbums, useFavoriteAlbums, useIsFavorite
+│   │                             # Also contains internal Redux selectors (createSelector)
+│   ├── useFavoritesHydration.ts  # Hydrates favorites from localStorage on mount
 │   └── index.ts                  # Hook exports
 │
-├── lib/                          # Utilities & API functions
-│   ├── api.ts                    # iTunes API calls + wrapper for API routes
+├── lib/                          # API functions & utilities
+│   ├── api.ts                    # iTunes API calls (dual mode: client calls API routes, server calls direct)
 │   ├── storage.ts                # localStorage helpers with validation
 │   ├── parse.ts                  # Data normalization & parsing
 │   ├── itunes.types.ts           # TypeScript types & interfaces
@@ -99,17 +150,17 @@ src/
 │       ├── albumsSlice.ts        # Albums list + fetchAlbums async thunk
 │       ├── albumDetailsSlice.ts  # Album tracks + fetchAlbumTracks async thunk
 │       ├── favoritesSlice.ts     # Favorites management + localStorage sync
-│       ├── uiSlice.ts            # UI state (theme, search, sort)
-│       └── __tests__/            # Redux tests
+│       └── uiSlice.ts            # UI state (theme, search, sort)
 │
 ├── styles/                       # Styling (100% styled-components)
-│   ├── GlobalStyle.ts            # Global styles & reset
-│   ├── styled.d.ts               # TypeScript definitions for styled-components
+│   ├── GlobalStyle.ts            # Global styles & CSS reset
+│   ├── styled.d.ts               # TypeScript definitions for styled-components theme
 │   └── theme.ts                  # Light/dark theme definitions
 │
 ├── utils/                        # Pure utility functions
 │   ├── index.ts                  # Barrel export
-│   └── search.ts                 # filterBySearchQuery, sortAlbums, filterAndSortAlbums
+│   ├── search.ts                 # filterBySearchQuery, sortAlbums, filterAndSortAlbums
+│   └── test-store.ts             # Test store helper (used by component tests)
 │
 └── public/                       # Static assets
 ```
@@ -125,38 +176,14 @@ npm run test:coverage    # Coverage report
 
 ## 🔧 Refactoring & Code Quality
 
-The project has been refactored for maintainability, scalability, and proper Redux Toolkit integration:
+The project has been extensively refactored for maintainability, performance, and clean architecture:
 
-### ✨ Key Improvements
-- **100% styled-components**: All CSS moved from components to dedicated `.styles.ts` files
-- **Custom Hooks**: Extracted `useFilteredAndSortedAlbums`, `useFavoriteAlbums`, `useIsFavorite` for reusability
-- **Utility Functions**: Centralized filtering, sorting, and common helpers in `/utils`
 
-- **Redux State Management**: Properly integrated Redux Toolkit with async thunks for all API calls
-- **API Routes**: Created Next.js API routes at `/api/albums` and `/api/albums/[id]` to proxy iTunes API (avoiding CORS on client)
-- **Album Details**: Dedicated Redux slice (`albumDetailsSlice`) for track management with `fetchAlbumTracks` async thunk
-- **Cleaner Components**: Components focused on logic, styles extracted to dedicated files
-- **Better Organization**: Hooks, utilities, styles, and API routes properly separated and indexed
-
-### 📦 Redux Integration
-- **`albumsSlice`**: Manages top 100 albums with `fetchAlbums` async thunk
-- **`albumDetailsSlice`**: Manages album tracks with `fetchAlbumTracks` async thunk
-- **`favoritesSlice`**: Manages saved albums with localStorage persistence
-- **`uiSlice`**: Manages UI state (theme, search, sort)
-
-### 📂 New Files & Directories
-- `src/hooks/` - Custom React hooks
-- `src/utils/` - Pure utility functions
-- `src/styles/ui/` - Reusable UI component styles
-- `src/app/api/albums/route.ts` - API endpoint for top albums
-- `src/app/api/albums/[id]/route.ts` - API endpoint for album details
-- `src/store/slices/albumDetailsSlice.ts` - Redux slice for tracks
-
-### 📄 Files Removed
-- `src/app/page.module.css` - Replaced with styled-components
-
-### 📄 Files Removed
-- `src/app/page.module.css` - No longer needed, replaced with styled-components
+### 🎯 Architecture Highlights
+- **Co-location**: Selectors with hooks, styles with routes
+- **Single responsibility**: Each file has one clear purpose
+- **Clean imports**: Barrel exports for components and utilities
+- **Type safety**: Full TypeScript coverage with proper types
 ## 🎯 Usage
 
 1. **Browse**: Top 100 albums load automatically
