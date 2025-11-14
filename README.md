@@ -4,18 +4,14 @@ A modern, responsive music album discovery application built with Next.js, React
 
 **[🌐 Live Demo](https://sky-music-steel.vercel.app/albums)** | **[📖 Feature Documentation](FEATURE.md)** | Status: ✅ Production Ready
 
-## ✨ Features Overview
+## ✨ Core Features
 
-| Feature | Description |
-|---------|-------------|
-| 🔍 **Search** | Real-time search by album name or artist |
-| � **Browse** | Top 100 albums from iTunes API in responsive grid |
-| � **Sort** | Sort by name/date/price |
-| ❤️ **Favorites** | Save favorite albums with one click, persistent |
-| 📱 **Album Details** | Complete track listing with durations |
-| � **Dark/Light Mode** | Theme toggle with preference saved |
-| � **Responsive** | Mobile-first design, works on all devices |
-| ⚡ **Fast** | Client-side operations, instant feedback |
+- 🎵 **Browse Top 100 Albums** - iTunes API integration
+- 🔍 **Search** - Real-time search by album/artist
+- 📊 **Sort** - By name, release date, or price
+- ❤️ **Favorites** (Our Feature!) - Save albums with one click, persistent storage
+- 📱 **Album Details** - Complete track information with durations
+- 🌙 **Dark/Light Theme** - Persistent theme preference
 
 
 ## 🛠️ Tech Stack
@@ -50,200 +46,53 @@ npm run dev
 # Open http://localhost:3000
 ```
 
-## 🎯 How to Use
+## 🎯 Usage
 
-### Browse Albums
-1. Home page automatically loads top 100 albums
-2. Scroll through responsive grid
-3. Click any album to view tracks and details
-
-### Search & Sort
-- **Search**: Type album name or artist for instant results
-- **Sort**: Change order by name, release date, or price
-
-### Manage Favorites
-- Click heart icon (❤️/🤍) on album cards to toggle
-- Favorites persist across browser sessions
-- View all favorites on `/favorites` page or click Favorites button in header.
-- Favorite count shown in header
-
-### View Album Details
-- Click album card to see:
-  - Complete track listing with durations
-  - Album artwork, genre, artist, price
-  - Track-by-track information
-
-### Toggle Theme
-- Click theme button in header
-- Preference automatically saved
-- Light mode: clean white background
-- Dark mode: comfortable dark background
+1. **Browse**: Home page loads top 100 albums from iTunes
+2. **Search**: Type album name or artist for real-time results
+3. **Filter**: Select genre or sort by name/date/price
+4. **Favorites**: Click heart icon to save (stored in localStorage)
+5. **Details**: Click album to view track list and info
+6. **Theme**: Toggle dark/light mode in header
 
 ## 📁 Project Structure
 
 ```
-./
-├── src/
-│   ├── app/                          # Next.js pages
-│   │   ├── layout.tsx                # Root layout + providers
-│   │   ├── page.tsx                  # Home redirect
-│   │   ├── albums/page.tsx           # Browse albums
-│   │   ├── album/[id]/page.tsx       # Album detail + tracks
-│   │   ├── favorites/page.tsx        # Favorite albums
-│   │   ├── global.ts                 # Global types
-│   │   └── globals.css               # CSS reset
-│   │
-│   ├── components/                   # React components
-│   │   ├── Header.tsx                # Navigation & theme toggle
-│   │   ├── Footer.tsx                # Footer
-│   │   ├── AlbumCard.tsx             # Album card component
-│   │   ├── AlbumGrid.tsx             # Responsive grid
-│   │   ├── SearchBar.tsx             # Search input
-│   │   ├── SortBar.tsx               # Sort & filter
-│   │   └── __tests__/                # Component tests
-│   │
-│   ├── lib/                          # Utilities
-│   │   ├── api.ts                    # iTunes API calls
-│   │   ├── itunes.types.ts           # Type definitions
-│   │   ├── parse.ts                  # Data normalization
-│   │   ├── storage.ts                # localStorage helpers
-│   │   └── __tests__/                # Utility tests
-│   │
-│   ├── store/                        # Redux store
-│   │   ├── index.ts                  # Store config
-│   │   ├── slices/
-│   │   │   ├── albumsSlice.ts        # Albums state
-│   │   │   ├── favoritesSlice.ts     # Favorites state
-│   │   │   ├── uiSlice.ts            # UI state (theme)
-│   │   │   └── __tests__/            # Redux tests
-│   │
-│   └── styles/                       # Styling
-│       ├── theme.ts                  # Color & spacing
-│       ├── mixins.ts                 # Reusable styles
-│       └── styled.d.ts               # Type extensions
-│
-├── public/                           # Static assets
-├── package.json                      # Dependencies
-├── tsconfig.json                     # TypeScript config
-├── next.config.ts                    # Next.js config
-├── jest.config.js                    # Jest config
-└── README.md                         # This file
-```
-
-## 🚀 Available Commands
-
-```bash
-npm run dev              # Start development server (port 3000)
-npm run build            # Production build
-npm start                # Start production server
-npm run lint             # Run ESLint
-npm test                 # Run Jest tests once
-npm run test:watch       # Watch mode for tests
-npm run test:coverage    # Generate coverage report
+src/
+├── app/                    # Next.js pages
+│   ├── albums/page.tsx     # Browse albums
+│   ├── album/[id]/page.tsx # Album details
+│   ├── favorites/page.tsx  # Favorites list
+│   └── layout.tsx          # Root layout + providers
+├── components/             # React components (Header, SearchBar, AlbumCard, etc.)
+├── lib/                    # Utilities (api.ts, storage.ts, types)
+├── store/                  # Redux slices (albums, favorites, ui)
+└── styles/                 # Theme & styled-components
 ```
 
 ## ✅ Testing
 
-Comprehensive test suite with 60+ tests:
-
-```
-Test Suites: 7 passed
-Tests:       60 passed
-Coverage:    Core features fully tested
-```
-
-Run tests with:
 ```bash
 npm test              # Run all tests once
 npm run test:coverage    # Coverage report
 ```
 
-## 🌐 Browser Support
+**Coverage**: Component tests, Redux tests, and utility tests ensuring core functionality works correctly
+## 🎯 Usage
 
-✅ Chrome/Edge 90+  
-✅ Firefox 88+  
-✅ Safari 14+  
-✅ Mobile browsers (iOS Safari, Chrome Mobile)  
+1. **Browse**: Top 100 albums load automatically
+2. **Search**: Type to filter by name/artist (real-time)
+3. **Sort**: Choose by name, date, or price
+4. **Favorites**: Click ❤️ to save albums
+5. **Details**: Click album to view full track list
+6. **Theme**: Toggle dark/light mode in header
 
-## 🏗️ Architecture
 
-### State Management
-- **Redux Toolkit**: Global state for albums, favorites, UI
-- **localStorage**: Persistence for favorites and theme preference
-- **useMemo**: Optimized filtering and sorting
+## 📖 More Info
 
-### Data Flow
-```
-Component Action
-    ↓
-Redux Dispatch
-    ↓
-State Update + localStorage Save
-    ↓
-Components Re-render
-    ↓
-UI Updates
-```
+- **[Feature Documentation](FEATURE.md)** - Details about the Favorites feature
 
-### API Integration
-- **iTunes API**: Top 100 albums endpoint (public, no key needed)
-- **Lookup API**: Detailed album info and tracks
-- **Error Handling**: Graceful error states with user feedback
-- **CORS**: Handled via JSONP
 
-## 🎨 Design System
-
-### Colors (Light Mode)
-- Primary: Indigo (#6366f1)
-- Secondary: Pink (#ec4899)
-- Background: White
-- Text: Dark gray
-
-### Colors (Dark Mode)
-- Primary: Indigo (#6366f1)
-- Secondary: Pink (#ec4899)
-- Background: Dark gray/black
-- Text: Light gray
-
-### Responsive Layout
-- **Mobile**: 1-2 columns
-- **Tablet**: 2-3 columns
-- **Desktop**: 4-6 columns
-- **Ultra-wide**: Up to 12 columns
-
-## 🔒 Privacy & Security
-
-- ✅ No server-side data storage
-- ✅ Favorites stored locally in browser only
-- ✅ No authentication required
-- ✅ No tracking or analytics
-- ✅ Direct API calls to iTunes (no intermediary)
-
-## 📱 Mobile Optimization
-
-- Responsive grid layout (1-12 columns)
-- Lazy loading images
-- Mobile-first CSS design
-- Proper viewport configuration
-
-## 🐛 Troubleshooting
-
-### Port 3000 already in use
-```bash
-npm run dev -- -p 3001
-```
-
-### Clear cache and reinstall
-```bash
-rm -rf node_modules package-lock.json
-npm install
-```
-
-### TypeScript errors
-```bash
-rm -rf .next
-npm run dev
-```
 
 ## � Resources
 
@@ -252,29 +101,16 @@ npm run dev
 - [Styled Components Docs](https://styled-components.com/docs)
 - [iTunes Search API](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/)
 
-## 📖 Documentation
-
-- **[Feature Documentation](FEATURE.md)** - Detailed feature guide
-
-## 🚀 Deployment
-
-### Live Deployment
-✅ **[Live Demo](https://sky-music-steel.vercel.app/albums)** - Currently deployed on Vercel
-
-
-## 📝 License
-
-This project is part of a technical interview assignment for Sky Germany.
-
 ## ✨ Summary
 
-Sky Music provides a **clean, fast, and intuitive** music discovery experience with:
-- ⚡ Instant search and filtering
-- ❤️ One-click favorites with persistence
-- 🌓 Beautiful dark/light themes
-- 📱 Responsive design for all devices
-- 🧪 Comprehensive test coverage (60+ tests)
-- 🛡️ Type-safe with full TypeScript
-- 📚 Well-documented and maintainable code
+A complete music discovery app demonstrating:
+- ✅ TypeScript best practices
+- ✅ Clean component structure
+- ✅ Redux state management
+- ✅ Comprehensive testing (60+ tests)
+- ✅ Responsive design
+- ✅ Production-ready code
+
+**Challenge Requirements Met**: Top 100 albums, clean modern UI, responsive design, cross-browser support, Next.js + styled-components + Redux, and a Favorites feature!
 
 **Production ready, fully tested, and optimized for performance.**
