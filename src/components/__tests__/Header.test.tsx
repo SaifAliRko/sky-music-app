@@ -5,6 +5,14 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { Header } from '../Header/Header';
 
+// Mock the storage module
+jest.mock('@/lib/storage', () => ({
+  saveTheme: jest.fn(),
+  saveFavorites: jest.fn(),
+  getTheme: jest.fn(() => 'light'),
+  getFavorites: jest.fn(() => []),
+}));
+
 describe('Header', () => {
   beforeEach(() => {
     localStorage.clear();
@@ -62,23 +70,25 @@ describe('Header', () => {
       </Provider>
     );
 
-    const button = screen.getByTitle('Toggle dark/light mode');
-
     // Initial state should be light
-    expect(localStorage.getItem).toHaveBeenCalledWith('sky_music_theme');
+    let state = store.getState();
+    expect(state.ui.theme).toBe('light');
 
     // Click to toggle
+    const button = screen.getByTitle('Toggle dark/light mode');
     fireEvent.click(button);
 
-    expect(localStorage.setItem).toHaveBeenCalled();
+    // State should be toggled to dark
+    state = store.getState();
+    expect(state.ui.theme).toBe('dark');
   });
 
   it('displays favorite count badge when there are favorites', async () => {
     const store = createTestStore();
 
-    // Add some favorites
-    store.dispatch({ type: 'favorites/addFavorite', payload: 'album-1' });
-    store.dispatch({ type: 'favorites/addFavorite', payload: 'album-2' });
+    // Add some favorites using toggleFavorite
+    store.dispatch({ type: 'favorites/toggleFavorite', payload: 'album-1' });
+    store.dispatch({ type: 'favorites/toggleFavorite', payload: 'album-2' });
 
     const { rerender } = render(
       <Provider store={store}>

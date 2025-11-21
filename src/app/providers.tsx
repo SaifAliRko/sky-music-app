@@ -1,58 +1,56 @@
 "use client";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
 /* eslint-disable react-hooks/set-state-in-effect */
-
-import { getFavorites } from "@/lib/storage";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { getFavorites, getTheme } from "@/lib/storage";
+import type { RootState } from "@/store";
 import { store } from "@/store";
 import { initializeFavorites } from "@/store/slices/favoritesSlice";
+import { setTheme } from "@/store/slices/uiSlice";
 import { GlobalStyle } from "@/styles/GlobalStyle";
 import { darkTheme, lightTheme } from "@/styles/theme";
 import { useEffect, useState } from "react";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { ThemeProvider } from "styled-components";
 
-function ProvidersContent({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<typeof lightTheme>(lightTheme);
+interface ProvidersProps {
+  children: React.ReactNode;
+}
+
+/**
+ * Provides Redux store with initialized state (theme, favorites)
+ * and applies theme styling to the entire app
+ */
+function ThemeWrapper({ children }: ProvidersProps) {
+  const themeMode = useSelector((state: RootState) => state.ui.theme);
+  const theme = themeMode === "dark" ? darkTheme : lightTheme;
+
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      {children}
+    </ThemeProvider>
+  );
+}
+
+export function Providers({ children }: ProvidersProps) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // Mark that we're on the client and hydration is complete
+    // Initialize app state from localStorage
+    store.dispatch(setTheme(getTheme()));
+    store.dispatch(initializeFavorites(getFavorites()));
+
+    // Mark hydration complete
     setIsClient(true);
-
-    // Check localStorage for theme preference
-    const savedTheme = localStorage.getItem("sky_music_theme") || "light";
-    const newTheme = savedTheme === "dark" ? darkTheme : lightTheme;
-    setTheme(newTheme);
-
-    // Initialize favorites from localStorage
-    const favorites = getFavorites();
-    store.dispatch(initializeFavorites(favorites));
-
-    const handleStorageChange = () => {
-      const updatedTheme = localStorage.getItem("sky_music_theme") || "light";
-      const newTheme = updatedTheme === "dark" ? darkTheme : lightTheme;
-      setTheme(newTheme);
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  // Only render content after client-side hydration
   if (!isClient) {
     return <LoadingSpinner />;
   }
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        {children}
-      </ThemeProvider>
+      <ThemeWrapper>{children}</ThemeWrapper>
     </Provider>
   );
-}
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return <ProvidersContent>{children}</ProvidersContent>;
 }

@@ -4,32 +4,17 @@
  * Acts as CORS proxy to avoid client-side CORS issues
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { fetchAlbumDetails } from '@/lib/api';
+import { createErrorResponse, handleApiRoute } from '@/lib/api-routes';
 
 export async function GET(
-  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-    
-    const url = `https://itunes.apple.com/lookup?id=${id}&entity=song`;
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      return NextResponse.json(
-        { error: 'Failed to fetch album' },
-        { status: response.status }
-      );
-    }
-    
-    const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching album:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+  const { id } = await params;
+
+  if (!id) {
+    return createErrorResponse('Album ID is required', 400);
   }
+
+  return handleApiRoute(() => fetchAlbumDetails(id));
 }

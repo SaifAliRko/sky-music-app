@@ -91,8 +91,8 @@ describe('FavoritesToggle', () => {
   it('shows Favorited text when album is in favorites', () => {
     const store = createTestStore();
 
-    // Add to favorites first
-    store.dispatch({ type: 'favorites/addFavorite', payload: 'test-album-1' });
+    // Add to favorites first using toggleFavorite
+    store.dispatch({ type: 'favorites/toggleFavorite', payload: 'test-album-1' });
 
     render(
       <Provider store={store}>

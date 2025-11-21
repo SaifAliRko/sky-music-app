@@ -18,26 +18,14 @@ const initialState: AlbumDetailsState = {
 
 /**
  * Async thunk to fetch album details and tracks
- * Returns the raw iTunes lookup response with tracks
+ * Returns parsed tracks directly (parsing happens in lib/api)
  */
 export const fetchAlbumTracks = createAsyncThunk(
   'albumDetails/fetchTracks',
   async (albumId: string, { rejectWithValue }) => {
     try {
-      const data = await fetchAlbumDetails(albumId);
-      
-      // Extract tracks from results (skip first which is album info)
-      const tracks = data.results
-        .slice(1)
-        .filter((result): result is ITunesTrack => 'trackId' in result)
-        .map((track) => ({
-          trackId: track.trackId,
-          trackName: track.trackName,
-          trackNumber: track.trackNumber,
-          trackTimeMillis: track.trackTimeMillis,
-          previewUrl: track.previewUrl,
-        }));
-      
+      // fetchAlbumDetails returns ITunesTrack[] directly (already parsed)
+      const tracks = await fetchAlbumDetails(albumId);
       return { albumId, tracks };
     } catch (error) {
       return rejectWithValue(

@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type SortOption = "name" | "artist" | "genre";
 type ThemeMode = "light" | "dark";
 
-interface UIState {
+export interface UIState {
   theme: ThemeMode;
   searchQuery: string;
   sortBy: SortOption;

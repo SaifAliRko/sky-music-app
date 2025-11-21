@@ -1,59 +1,42 @@
-"use client";
+'use client';
 
-import { AlbumGrid } from "@/components/AlbumGrid";
-import { BackToAlbumsButton } from "@/components/BackToAlbumsButton";
-import { useFavoritesHydration } from "@/hooks/useFavoritesHydration";
-import { useMemo } from "react";
+import { BackToAlbumsButton } from '@/components/BackToAlbumsButton';
+import { FavoritesContent } from '@/components/FavoritesContent';
+import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
+import { useFavoritesPage } from '@/hooks/useFavoritesPage';
 import {
-  BackLink,
   Count,
-  EmptyIcon,
-  EmptyState,
-  EmptyText,
   FavoritesHeader,
   FavoritesWrapper,
   HeaderLeft,
+  MainContent,
   Title,
-} from "./styles/favorites.styles";
+} from './page.styles';
 
 export default function FavoritesPage() {
-  const { isHydrated, albums, favoriteIds } = useFavoritesHydration();
-
-  const favoritesArray = useMemo(() => {
-    return albums.filter((album) => favoriteIds.includes(album.id));
-  }, [albums, favoriteIds]);
-
-  // Don't render until hydration is complete
-  if (!isHydrated) {
-    return null;
-  }
+  const { hasLoaded, favoritesArray, favoriteCount } = useFavoritesPage();
 
   return (
     <FavoritesWrapper>
-      <FavoritesHeader>
-        <HeaderLeft>
-          <Title>
-            ❤️ My Favorites
-            {favoritesArray.length > 0 && (
-              <Count>({favoritesArray.length})</Count>
-            )}
-          </Title>
-        </HeaderLeft>
-        <BackToAlbumsButton />
-      </FavoritesHeader>
-
-      {favoritesArray.length === 0 ? (
-        <EmptyState>
-          <EmptyIcon>💔</EmptyIcon>
-          <EmptyText>
-            No favorites yet! Start adding albums to your favorites by clicking
-            the heart icon on any album.
-          </EmptyText>
-          <BackLink href="/albums">Browse Albums</BackLink>
-        </EmptyState>
-      ) : (
-        <AlbumGrid albums={favoritesArray} />
-      )}
+      <Header />
+      <MainContent>
+        <FavoritesHeader>
+          <HeaderLeft>
+            <Title>
+              ❤️ My Favorites
+              {favoriteCount > 0 && <Count>({favoriteCount})</Count>}
+            </Title>
+          </HeaderLeft>
+          <BackToAlbumsButton />
+        </FavoritesHeader>
+        <FavoritesContent
+          hasLoaded={hasLoaded}
+          favoritesArray={favoritesArray}
+          favoriteCount={favoriteCount}
+        />
+      </MainContent>
+      <Footer />
     </FavoritesWrapper>
   );
 }

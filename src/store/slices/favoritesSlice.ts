@@ -31,23 +31,6 @@ const favoritesSlice = createSlice({
       saveFavorites(state.ids);
     },
 
-    addFavorite: (state, action: PayloadAction<string>) => {
-      const id = action.payload;
-      if (!state.ids.includes(id)) {
-        state.ids.push(id);
-        saveFavorites(state.ids);
-      }
-    },
-
-    removeFavorite: (state, action: PayloadAction<string>) => {
-      const id = action.payload;
-      const index = state.ids.indexOf(id);
-      if (index !== -1) {
-        state.ids.splice(index, 1);
-        saveFavorites(state.ids);
-      }
-    },
-
     initializeFavorites: (state, action: PayloadAction<string[]>) => {
       // Ensure no duplicates
       state.ids = Array.from(new Set(action.payload));
@@ -58,8 +41,6 @@ const favoritesSlice = createSlice({
 
 export const {
   toggleFavorite,
-  addFavorite,
-  removeFavorite,
   initializeFavorites,
 } = favoritesSlice.actions;
 export default favoritesSlice.reducer;

@@ -1,8 +1,6 @@
 import favoritesReducer, {
-  toggleFavorite,
-  addFavorite,
-  removeFavorite,
-  initializeFavorites,
+    initializeFavorites,
+    toggleFavorite,
 } from '../favoritesSlice';
 
 // Mock the storage module
@@ -40,53 +38,6 @@ describe('favoritesSlice', () => {
       const action = { type: toggleFavorite.type, payload: 'album-2' };
       const result = favoritesReducer(state, action);
       expect(result.ids).toEqual(['album-1']);
-    });
-  });
-
-  describe('addFavorite', () => {
-    it('should add a favorite', () => {
-      const state = { ...initialState, ids: [] };
-      const action = { type: addFavorite.type, payload: 'album-1' };
-      const result = favoritesReducer(state, action);
-      expect(result.ids).toContain('album-1');
-    });
-
-    it('should not add duplicate favorites', () => {
-      const state = { ...initialState, ids: ['album-1'] };
-      const action = { type: addFavorite.type, payload: 'album-1' };
-      const result = favoritesReducer(state, action);
-      expect(result.ids).toEqual(['album-1']);
-      expect(result.ids.length).toBe(1);
-    });
-
-    it('should add multiple different favorites', () => {
-      const state = { ...initialState, ids: ['album-1'] };
-      const action = { type: addFavorite.type, payload: 'album-2' };
-      const result = favoritesReducer(state, action);
-      expect(result.ids).toEqual(['album-1', 'album-2']);
-    });
-  });
-
-  describe('removeFavorite', () => {
-    it('should remove a favorite', () => {
-      const state = { ...initialState, ids: ['album-1', 'album-2'] };
-      const action = { type: removeFavorite.type, payload: 'album-1' };
-      const result = favoritesReducer(state, action);
-      expect(result.ids).toEqual(['album-2']);
-    });
-
-    it('should handle removing non-existent favorite', () => {
-      const state = { ...initialState, ids: ['album-1'] };
-      const action = { type: removeFavorite.type, payload: 'album-999' };
-      const result = favoritesReducer(state, action);
-      expect(result.ids).toEqual(['album-1']);
-    });
-
-    it('should handle removing from empty state', () => {
-      const state = { ...initialState, ids: [] };
-      const action = { type: removeFavorite.type, payload: 'album-1' };
-      const result = favoritesReducer(state, action);
-      expect(result.ids).toEqual([]);
     });
   });
 

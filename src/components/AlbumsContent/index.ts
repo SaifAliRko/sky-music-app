@@ -1,0 +1,2 @@
+export { AlbumsContent } from './AlbumsContent';
+

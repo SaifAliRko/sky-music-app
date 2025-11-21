@@ -1,9 +1,15 @@
-import Link from 'next/link';
 import styled from 'styled-components';
 
 export const FavoritesWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: ${(props) => props.theme.colors.background};
+`;
+
+export const MainContent = styled.main`
+  flex: 1;
   padding: ${(props) => props.theme.spacing.xl};
-  min-height: calc(100vh - 200px);
 `;
 
 export const FavoritesHeader = styled.div`
@@ -66,6 +72,8 @@ export const EmptyText = styled.p`
   max-width: 400px;
 `;
 
+import Link from 'next/link';
+
 export const BackLink = styled(Link)`
   display: inline-flex;
   align-items: center;
@@ -81,51 +89,5 @@ export const BackLink = styled(Link)`
   &:hover {
     background-color: ${(props) => props.theme.colors.primaryDark};
     transform: translateY(-2px);
-  }
-`;
-
-export const HeaderButton = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  gap: ${(props) => props.theme.spacing.xs};
-  padding: ${(props) => props.theme.spacing.xs} ${(props) => props.theme.spacing.sm};
-  background-color: transparent;
-  color: ${(props) => props.theme.colors.text};
-  text-decoration: none;
-  border-radius: ${(props) => props.theme.borderRadius.md};
-  transition: all 0.3s ease-in-out;
-  font-weight: ${(props) => props.theme.typography.fontWeight.medium};
-  font-size: ${(props) => props.theme.typography.fontSize.sm};
-  white-space: nowrap;
-  cursor: pointer;
-
-  &:hover {
-    background: linear-gradient(90deg, #ff6b00 0%, #ff1493 25%, #ff00ff 50%, #6200ff 75%, #0066ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transform: translateX(-4px);
-    text-decoration: none;
-  }
-
-  img {
-    width: 35px;
-    height: 35px;
-    filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(1500%) hue-rotate(250deg);
-    transition: filter 0.3s ease-in-out;
-  }
-
-  &:hover img {
-    filter: brightness(0) saturate(100%) invert(35%) sepia(100%) saturate(2000%) hue-rotate(250deg);
-  }
-
-  @media (max-width: 768px) {
-    padding: ${(props) => props.theme.spacing.xs} ${(props) => props.theme.spacing.xs};
-    font-size: ${(props) => props.theme.typography.fontSize.xs};
-
-    img {
-      width: 24px;
-      height: 24px;
-    }
   }
 `;

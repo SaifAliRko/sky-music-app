@@ -1,4 +1,4 @@
-import { getFavorites, saveFavorites, getTheme, saveTheme } from '../storage';
+import { getFavorites, getTheme, saveFavorites, saveTheme } from '../storage';
 
 // Clear mocks before each test
 beforeEach(() => {
@@ -33,7 +33,7 @@ describe('Storage Utilities', () => {
 
     it('should return empty array when window is undefined', () => {
       const originalWindow = global.window;
-      // @ts-ignore
+      // @ts-expect-error - Intentionally deleting window for testing SSR behavior
       delete global.window;
       const result = getFavorites();
       expect(result).toEqual([]);
@@ -60,7 +60,7 @@ describe('Storage Utilities', () => {
 
     it('should not throw when window is undefined', () => {
       const originalWindow = global.window;
-      // @ts-ignore
+      // @ts-expect-error - Intentionally deleting window for testing SSR behavior
       delete global.window;
       expect(() => saveFavorites(['id1'])).not.toThrow();
       global.window = originalWindow;
@@ -121,7 +121,7 @@ describe('Storage Utilities', () => {
 
     it('should not throw when window is undefined', () => {
       const originalWindow = global.window;
-      // @ts-ignore
+      // @ts-expect-error - Intentionally deleting window for testing SSR behavior
       delete global.window;
       expect(() => saveTheme('dark')).not.toThrow();
       global.window = originalWindow;

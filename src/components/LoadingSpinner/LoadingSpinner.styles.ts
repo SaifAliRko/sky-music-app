@@ -9,7 +9,6 @@ export const SpinnerContainer = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #000000;
 `;
 
 export const Spinner = styled.div`

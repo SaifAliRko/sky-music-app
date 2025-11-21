@@ -1,23 +1,8 @@
 /**
- * Styled components for the Album Detail page
+ * Styled components for the Album Content component
  */
 
 import styled from 'styled-components';
-
-export const PageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: ${(props) => props.theme.colors.background};
-`;
-
-export const MainContent = styled.main`
-  flex: 1;
-  max-width: 1000px;
-  margin: 0 auto;
-  width: 100%;
-  padding: ${(props) => props.theme.spacing.xxl};
-`;
 
 export const AlbumHeader = styled.div`
   display: flex;
@@ -144,25 +129,12 @@ export const TrackDuration = styled.span`
   font-size: ${(props) => props.theme.typography.fontSize.sm};
 `;
 
-export const LoadingWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  font-size: ${(props) => props.theme.typography.fontSize.lg};
-  color: ${(props) => props.theme.colors.textSecondary};
-`;
-
 export const ErrorWrapper = styled.div`
   padding: ${(props) => props.theme.spacing.xxl};
   background-color: ${(props) => `${props.theme.colors.error}10`};
+  border-left: 4px solid ${(props) => props.theme.colors.error};
+  border-radius: ${(props) => props.theme.borderRadius.md};
   color: ${(props) => props.theme.colors.error};
   text-align: center;
-  border-radius: ${(props) => props.theme.borderRadius.lg};
-`;
-
-export const HeaderButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: ${(props) => props.theme.spacing.xl};
+  font-weight: ${(props) => props.theme.typography.fontWeight.semibold};
 `;
