@@ -21,10 +21,6 @@ export function Header() {
   const isDark = useSelector((state: RootState) => state.ui.theme === "dark");
   const favoriteIds = useSelector((state: RootState) => state.favorites.ids);
 
-  const handleToggleTheme = () => {
-    dispatch(toggleTheme());
-  };
-
   return (
     <HeaderWrapper>
       <Link href="/albums" title="Go to Albums">
