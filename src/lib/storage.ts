@@ -5,91 +5,76 @@
 const FAVORITES_KEY = 'sky_music_favorites';
 const THEME_KEY = 'sky_music_theme';
 
-/**
- * Get favorite album IDs from localStorage
- * Automatically deduplicates to prevent count mismatch issues
- */
-export function getFavorites(): string[] {
+const isClient = () => typeof window !== 'undefined';
+
+const getItem = (key: string): string | null => {
+  if (!isClient()) return null;
   try {
-    if (typeof window === 'undefined') {
-      return [];
-    }
-    const data = localStorage.getItem(FAVORITES_KEY);
-    let favorites: string[] = [];
-    
-    // Only parse if data exists and is not empty
-    if (data && data.trim() !== '') {
-      try {
-        const parsed = JSON.parse(data);
-        // Ensure it's an array and filter out null/undefined values
-        if (Array.isArray(parsed)) {
-          favorites = parsed.filter((id): id is string => typeof id === 'string' && id.length > 0);
-        }
-      } catch {
-        // If JSON parsing fails, clear the corrupted data
-        localStorage.removeItem(FAVORITES_KEY);
-        return [];
-      }
-    }
-    
-    // Deduplicate on read to fix any corrupted data
-    const deduplicated = Array.from(new Set(favorites));
-    
-    // If we had to deduplicate or filter, save the cleaned version
-    if (deduplicated.length !== favorites.length || (data && deduplicated.length === 0)) {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(deduplicated));
-    }
-    
-    return deduplicated;
+    return localStorage.getItem(key);
   } catch (error) {
-    console.error('Error reading favorites from storage:', error);
+    console.error('Error reading from storage:', error);
+    return null;
+  }
+};
+
+const setItem = (key: string, value: string): void => {
+  if (!isClient()) return;
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    console.error('Error saving to storage:', error);
+  }
+};
+
+const removeItem = (key: string): void => {
+  if (!isClient()) return;
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {
+    console.error('Error removing from storage:', error);
+  }
+};
+
+/** Get favorite album IDs from localStorage, deduplicated */
+export const getFavorites = (): string[] => {
+  try {
+    const data = getItem(FAVORITES_KEY);
+    if (!data?.trim()) return [];
+
+    const parsed = JSON.parse(data);
+    const favorites = Array.isArray(parsed)
+      ? parsed.filter((id): id is string => typeof id === 'string' && id.length > 0)
+      : [];
+
+    // Deduplicate and save if changed
+    const deduplicated = Array.from(new Set(favorites));
+    if (deduplicated.length !== favorites.length) {
+      setItem(FAVORITES_KEY, JSON.stringify(deduplicated));
+    }
+    return deduplicated;
+  } catch {
+    removeItem(FAVORITES_KEY);
     return [];
   }
-}
+};
 
-/**
- * Save favorite album IDs to localStorage
- * Automatically deduplicates to prevent count mismatch issues
- */
-export function saveFavorites(favorites: string[]): void {
-  try {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    // Deduplicate before saving
-    const deduplicated = Array.from(new Set(favorites));
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(deduplicated));
-  } catch (error) {
-    console.error('Error saving favorites to storage:', error);
-  }
-}
+/** Save favorite album IDs to localStorage */
+export const saveFavorites = (favorites: string[]): void => {
+  const deduplicated = Array.from(new Set(favorites));
+  setItem(FAVORITES_KEY, JSON.stringify(deduplicated));
+};
 
-/**
- * Get theme preference from localStorage
- */
-export function getTheme(): 'light' | 'dark' {
+/** Get theme preference from localStorage */
+export const getTheme = (): 'light' | 'dark' => {
   try {
-    if (typeof window === 'undefined') {
-      return 'light';
-    }
-    const theme = localStorage.getItem(THEME_KEY);
+    const theme = getItem(THEME_KEY);
     return theme === 'dark' ? 'dark' : 'light';
-  } catch (error) {
-    console.error('Error reading theme from storage:', error);
+  } catch {
     return 'light';
   }
-}
+};
 
-/**
- * Save theme preference to localStorage
- */
-export function saveTheme(theme: 'light' | 'dark'): void {
-  try {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    localStorage.setItem(THEME_KEY, theme);
-  } catch (error) {
-    console.error('Error saving theme to storage:', error);
-  }
-}
+/** Save theme preference to localStorage */
+export const saveTheme = (theme: 'light' | 'dark'): void => {
+  setItem(THEME_KEY, theme);
+};

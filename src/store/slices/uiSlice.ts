@@ -18,18 +18,23 @@ const initialState: UIState = {
   filterGenre: null,
 };
 
+const saveThemeHelper = (theme: ThemeMode): ThemeMode => {
+  saveTheme(theme);
+  return theme;
+};
+
 const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
     setTheme: (state, action: PayloadAction<ThemeMode>) => {
-      state.theme = action.payload;
-      saveTheme(action.payload);
+      state.theme = saveThemeHelper(action.payload);
     },
 
     toggleTheme: (state) => {
-      state.theme = state.theme === "light" ? "dark" : "light";
-      saveTheme(state.theme);
+      state.theme = saveThemeHelper(
+        state.theme === "light" ? "dark" : "light"
+      );
     },
 
     setSearchQuery: (state, action: PayloadAction<string>) => {

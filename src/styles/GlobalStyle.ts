@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
@@ -15,8 +14,8 @@ export const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-    background-color: ${(props: any) => props.theme.colors.background};
-    color: ${(props: any) => props.theme.colors.text};
+    background-color: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.text};
     font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     font-weight: 400;
     line-height: 1.5;
@@ -60,15 +59,15 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-track {
-    background-color: ${(props: any) => props.theme.colors.surface};
+    background-color: ${({ theme }) => theme.colors.surface};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${(props: any) => props.theme.colors.border};
-    border-radius: ${(props: any) => props.theme.borderRadius.full};
+    background-color: ${({ theme }) => theme.colors.border};
+    border-radius: ${({ theme }) => theme.borderRadius.full};
 
     &:hover {
-      background-color: ${(props: any) => props.theme.colors.textSecondary};
+      background-color: ${({ theme }) => theme.colors.textSecondary};
     }
   }
 `;

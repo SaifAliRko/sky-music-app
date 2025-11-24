@@ -1,58 +1,34 @@
 
-//  iTunes API Response Types
+// iTunes API Response Types
 
-// RSS Feed response from iTunes
+/** RSS Feed response from iTunes */
 export interface ITunesRSSResponse {
   feed: {
     entry: ITunesRSSEntry[];
-    updated?: {
-      label?: string;
-    };
-    title?: {
-      label?: string;
-    };
+    updated?: { label?: string };
+    title?: { label?: string };
   };
 }
 
-// Individual album entry from RSS
+/** Individual album entry from RSS feed */
 export interface ITunesRSSEntry {
-  'im:name': {
-    label: string;
-  };
-  'im:artist': {
-    label: string;
-  };
+  'im:name': { label: string };
+  'im:artist': { label: string };
   'im:image': Array<{
     label: string;
-    attributes?: {
-      height: string;
-    };
+    attributes?: { height: string };
   }>;
   'im:price': {
     label: string;
-    attributes?: {
-      amount: string;
-      currency: string;
-    };
+    attributes?: { amount: string; currency: string };
   };
   'im:contentType': {
     'im:contentGenre': {
-      attributes: {
-        term: string;
-        label: string;
-      };
+      attributes: { term: string; label: string };
     };
   };
-  link?: {
-    attributes?: {
-      href: string;
-    };
-  };
-  id: {
-    attributes: {
-      'im:id': string;
-    };
-  };
+  link?: { attributes?: { href: string } };
+  id: { attributes: { 'im:id': string } };
 }
 
 // Album entity (normalized from RSS)
@@ -67,13 +43,8 @@ export interface Album {
   releaseDate?: string;
 }
 
-// iTunes Lookup response for album details
-export interface ITunesLookupResponse {
-  resultCount: number;
-  results: ITunesAlbumDetail[];
-}
-
-export interface ITunesAlbumDetail {
+// Internal album detail type (from iTunes lookup)
+interface ITunesAlbumDetail {
   collectionId: number;
   collectionName: string;
   artistName: string;
@@ -92,6 +63,7 @@ export interface ITunesTrackLookupResponse {
   results: (ITunesAlbumDetail | ITunesTrack)[];
 }
 
+/** Track from album lookup */
 export interface ITunesTrack {
   trackId: number;
   trackName: string;

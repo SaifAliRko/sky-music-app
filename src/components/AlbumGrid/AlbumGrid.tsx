@@ -1,5 +1,3 @@
-'use client';
-
 import { Album } from '@/lib/itunes.types';
 import { AlbumCard } from '../AlbumCard';
 import { EmptyState, GridWrapper } from './AlbumGrid.styles';

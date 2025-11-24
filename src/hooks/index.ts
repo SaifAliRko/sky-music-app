@@ -1,9 +1,12 @@
-/**
- * Export all custom hooks
- */
-
-export { useAlbumDetail } from './useAlbumDetail';
-export { useFavoriteAlbums, useFilteredAndSortedAlbums, useIsFavorite, useSearchQuery, useSortBy, useTheme } from './useAlbums';
-export { useAlbumsPage } from './useAlbumsPage';
-export { useFavoritesPage } from './useFavoritesPage';
+export { useAlbumDetail } from "./useAlbumDetail";
+export {
+    useFavoriteAlbums,
+    useFilteredAndSortedAlbums,
+    useIsFavorite,
+    useSearchQuery,
+    useSortBy,
+    useTheme
+} from "./useAlbums";
+export { useFavoritesPage } from "./useFavoritesPage";
+export { useFetchOnMount } from "./useFetchOnMount";
 

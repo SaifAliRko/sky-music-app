@@ -3,11 +3,8 @@ import { fetchAlbumTracks } from "@/store/slices/albumDetailsSlice";
 import { fetchAlbums } from "@/store/slices/albumsSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useFetchOnMount } from "./useFetchOnMount";
 
-/**
- * Custom hook for album detail page logic
- * Handles data fetching and state selection
- */
 export function useAlbumDetail(albumId: string) {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -15,7 +12,7 @@ export function useAlbumDetail(albumId: string) {
     state.albums.entities.find((a) => a.id === albumId)
   );
 
-  const { hasLoaded: albumsLoaded, loading: albumsLoading } = useSelector(
+  const { hasLoaded: albumsLoaded } = useSelector(
     (state: RootState) => state.albums
   );
 
@@ -25,14 +22,8 @@ export function useAlbumDetail(albumId: string) {
     error,
   } = useSelector((state: RootState) => state.albumDetails);
 
-  // Fetch albums list on mount if not loaded
-  useEffect(() => {
-    if (!albumsLoaded && !albumsLoading) {
-      dispatch(fetchAlbums());
-    }
-  }, [dispatch, albumsLoaded, albumsLoading]);
+  useFetchOnMount(albumsLoaded, fetchAlbums);
 
-  // Fetch album tracks when albumId changes
   useEffect(() => {
     if (albumId) {
       dispatch(fetchAlbumTracks(albumId));
@@ -41,7 +32,6 @@ export function useAlbumDetail(albumId: string) {
 
   return {
     album,
-    albumsLoaded,
     tracks,
     tracksLoading,
     error,

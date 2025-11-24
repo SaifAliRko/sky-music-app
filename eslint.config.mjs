@@ -15,6 +15,11 @@ const eslintConfig = defineConfig([
     // Jest setup file requires CommonJS syntax
     "jest.setup.js",
   ]),
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

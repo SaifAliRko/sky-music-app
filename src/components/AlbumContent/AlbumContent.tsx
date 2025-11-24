@@ -3,22 +3,22 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import type { Album, ITunesTrack } from "@/lib/itunes.types";
 import { formatDuration } from "@/lib/parse";
 import {
-    AlbumHeader,
-    AlbumImage,
-    AlbumInfo,
-    Artist,
-    ErrorWrapper,
-    Meta,
-    MetaItem,
-    Title,
-    TrackDuration,
-    TrackHeader,
-    TrackItem,
-    TrackName,
-    TrackNumber,
-    TracksList,
-    TracksSection,
-    TracksTitle,
+  AlbumHeader,
+  AlbumImage,
+  AlbumInfo,
+  Artist,
+  ErrorWrapper,
+  Meta,
+  MetaItem,
+  Title,
+  TrackDuration,
+  TrackHeader,
+  TrackItem,
+  TrackName,
+  TrackNumber,
+  TracksList,
+  TracksSection,
+  TracksTitle,
 } from "./AlbumContent.styles";
 
 interface AlbumContentProps {
@@ -27,7 +27,6 @@ interface AlbumContentProps {
   tracks: ITunesTrack[];
   tracksLoading: boolean;
   error: string | null;
-  albumsLoaded: boolean;
 }
 
 export function AlbumContent({
@@ -36,13 +35,7 @@ export function AlbumContent({
   tracks,
   tracksLoading,
   error,
-  albumsLoaded,
 }: AlbumContentProps) {
-  // Loading state - waiting for albums
-  if (!albumsLoaded) {
-    return <LoadingSpinner />;
-  }
-
   // Error state - album not found
   if (!album) {
     return <ErrorWrapper>Album not found</ErrorWrapper>;
@@ -61,14 +54,14 @@ export function AlbumContent({
           </Meta>
           <FavoritesToggle albumId={albumId} showLabel={true} />
         </AlbumInfo>
+
       </AlbumHeader>
 
       <TracksSection>
         <TracksTitle>
           Tracks {tracks.length > 0 && `(${tracks.length})`}
         </TracksTitle>
-
-        {tracksLoading ? (
+{tracksLoading ? (
           <LoadingSpinner />
         ) : error ? (
           <ErrorWrapper>Failed to load tracks: {error}</ErrorWrapper>

@@ -1,5 +1,5 @@
-import { HeaderButton } from "@/app/favorites/styles/favorites.styles";
-import Image from "next/image";
+import Image from 'next/image';
+import { HeaderButton } from './BackToAlbumsButton.styles';
 
 export function BackToAlbumsButton() {
   return (

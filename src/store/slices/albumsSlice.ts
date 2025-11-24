@@ -20,12 +20,10 @@ export const fetchAlbums = createAsyncThunk(
   'albums/fetchAlbums',
   async (_, { rejectWithValue }) => {
     try {
-      const albums = await fetchTopAlbums();
-      return albums;
+      return await fetchTopAlbums();
     } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : 'Failed to fetch albums'
-      );
+      const message = error instanceof Error ? error.message : 'Failed to fetch albums';
+      return rejectWithValue(message);
     }
   }
 );

@@ -16,7 +16,7 @@ export default function AlbumDetailPage() {
   const params = useParams();
   const albumId = params.id as string;
 
-  const { album, albumsLoaded, tracks, tracksLoading, error } =
+  const { album, tracks, tracksLoading, error } =
     useAlbumDetail(albumId);
 
   return (
@@ -32,7 +32,6 @@ export default function AlbumDetailPage() {
           tracks={tracks}
           tracksLoading={tracksLoading}
           error={error}
-          albumsLoaded={albumsLoaded}
         />
       </MainContent>
       <Footer />

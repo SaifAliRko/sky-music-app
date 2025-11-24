@@ -1,17 +1,21 @@
-import { AlbumGrid } from "@/components/AlbumGrid";
-import { LoadingSkeletons } from "@/components/LoadingSkeletons";
-import { SearchBar } from "@/components/SearchBar";
-import { SortBar } from "@/components/SortBar";
-import { useFilteredAndSortedAlbums } from "@/hooks/useAlbums";
-import { ErrorWrapper } from "./AlbumsContent.styles";
+import { AlbumGrid } from '@/components/AlbumGrid';
+import { LoadingSkeletons } from '@/components/LoadingSkeletons';
+import { SearchBar } from '@/components/SearchBar';
+import { SortBar } from '@/components/SortBar';
+import { useFilteredAndSortedAlbums } from '@/hooks/useAlbums';
+import { useFetchOnMount } from '@/hooks/useFetchOnMount';
+import type { RootState } from '@/store';
+import { fetchAlbums } from '@/store/slices/albumsSlice';
+import { useSelector } from 'react-redux';
+import { ErrorWrapper } from './AlbumsContent.styles';
 
-interface AlbumsContentProps {
-  hasLoaded: boolean;
-  error: string | null;
-}
-
-export function AlbumsContent({ hasLoaded, error }: AlbumsContentProps) {
+export function AlbumsContent() {
+  const { hasLoaded, error } = useSelector(
+    (state: RootState) => state.albums
+  );
   const filteredAlbums = useFilteredAndSortedAlbums();
+
+  useFetchOnMount(hasLoaded, fetchAlbums);
 
   return (
     <>

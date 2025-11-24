@@ -17,22 +17,15 @@ const favoritesSlice = createSlice({
   reducers: {
     toggleFavorite: (state, action: PayloadAction<string>) => {
       const id = action.payload;
-      const index = state.ids.indexOf(id);
-
-      if (index === -1) {
-        // Add to favorites
-        state.ids.push(id);
+      if (state.ids.includes(id)) {
+        state.ids = state.ids.filter((fav) => fav !== id);
       } else {
-        // Remove from favorites
-        state.ids.splice(index, 1);
+        state.ids.push(id);
       }
-
-      // Persist to localStorage
       saveFavorites(state.ids);
     },
 
     initializeFavorites: (state, action: PayloadAction<string[]>) => {
-      // Ensure no duplicates
       state.ids = Array.from(new Set(action.payload));
       state.initialized = true;
     },

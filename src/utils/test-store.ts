@@ -8,8 +8,8 @@ import { configureStore } from '@reduxjs/toolkit';
  * Create a test store with all reducers
  * Used across component tests for consistent setup
  */
-export function createTestStore() {
-  return configureStore({
+export const createTestStore = () =>
+  configureStore({
     reducer: {
       albums: albumsReducer,
       albumDetails: albumDetailsReducer,
@@ -17,4 +17,3 @@ export function createTestStore() {
       ui: uiReducer,
     },
   });
-}

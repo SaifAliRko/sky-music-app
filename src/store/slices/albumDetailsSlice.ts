@@ -24,13 +24,11 @@ export const fetchAlbumTracks = createAsyncThunk(
   'albumDetails/fetchTracks',
   async (albumId: string, { rejectWithValue }) => {
     try {
-      // fetchAlbumDetails returns ITunesTrack[] directly (already parsed)
       const tracks = await fetchAlbumDetails(albumId);
       return { albumId, tracks };
     } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : 'Failed to fetch album details'
-      );
+      const message = error instanceof Error ? error.message : 'Failed to fetch album details';
+      return rejectWithValue(message);
     }
   }
 );

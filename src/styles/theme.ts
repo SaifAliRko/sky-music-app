@@ -1,4 +1,47 @@
+const commonTheme = {
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
+    xxl: '3rem',
+  },
+  typography: {
+    fontSize: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      xxl: '1.5rem',
+      xxxl: '2rem',
+    },
+    fontWeight: {
+      light: 300,
+      normal: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+    },
+  },
+  borderRadius: {
+    sm: '0.25rem',
+    md: '0.5rem',
+    lg: '0.75rem',
+    xl: '1rem',
+    full: '9999px',
+  },
+  breakpoints: {
+    mobile: '640px',
+    tablet: '768px',
+    desktop: '1024px',
+    wide: '1280px',
+  },
+} as const;
+
 export const lightTheme = {
+  ...commonTheme,
   colors: {
     primary: '#6366f1',
     primaryLight: '#818cf8',
@@ -18,48 +61,10 @@ export const lightTheme = {
     shadow: 'rgba(0, 0, 0, 0.1)',
     shadowHeavy: 'rgba(0, 0, 0, 0.2)',
   },
-  spacing: {
-    xs: '0.25rem',
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '1.5rem',
-    xl: '2rem',
-    xxl: '3rem',
-  },
-  typography: {
-    fontSize: {
-      xs: '0.75rem',
-      sm: '0.875rem',
-      base: '1rem',
-      lg: '1.125rem',
-      xl: '1.25rem',
-      xxl: '1.5rem',
-      xxxl: '2rem',
-    },
-    fontWeight: {
-      light: 300,
-      normal: 400,
-      medium: 500,
-      semibold: 600,
-      bold: 700,
-    },
-  },
-  borderRadius: {
-    sm: '0.25rem',
-    md: '0.5rem',
-    lg: '0.75rem',
-    xl: '1rem',
-    full: '9999px',
-  },
-  breakpoints: {
-    mobile: '640px',
-    tablet: '768px',
-    desktop: '1024px',
-    wide: '1280px',
-  },
 };
 
 export const darkTheme = {
+  ...commonTheme,
   colors: {
     primary: '#818cf8',
     primaryLight: '#a5b4fc',
@@ -78,45 +83,6 @@ export const darkTheme = {
     warning: '#f59e0b',
     shadow: 'rgba(0, 0, 0, 0.3)',
     shadowHeavy: 'rgba(0, 0, 0, 0.5)',
-  },
-  spacing: {
-    xs: '0.25rem',
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '1.5rem',
-    xl: '2rem',
-    xxl: '3rem',
-  },
-  typography: {
-    fontSize: {
-      xs: '0.75rem',
-      sm: '0.875rem',
-      base: '1rem',
-      lg: '1.125rem',
-      xl: '1.25rem',
-      xxl: '1.5rem',
-      xxxl: '2rem',
-    },
-    fontWeight: {
-      light: 300,
-      normal: 400,
-      medium: 500,
-      semibold: 600,
-      bold: 700,
-    },
-  },
-  borderRadius: {
-    sm: '0.25rem',
-    md: '0.5rem',
-    lg: '0.75rem',
-    xl: '1rem',
-    full: '9999px',
-  },
-  breakpoints: {
-    mobile: '640px',
-    tablet: '768px',
-    desktop: '1024px',
-    wide: '1280px',
   },
 };
 
